@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tienda Demo — Pago con PSE</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ===================== PANTALLA 1: CHECKOUT E-COMMERCE ===================== -->
+  <section id="screen-checkout" class="screen screen--active">
+    <header class="store-header">
+      <div class="store-header__brand">
+        <span class="store-header__logo">🛍️</span>
+        <span class="store-header__name">Tienda Andina</span>
+      </div>
+      <div class="store-header__cart">
+        <span>🛒</span>
+        <span id="cart-count">3 productos</span>
+      </div>
+    </header>
+
+    <main class="checkout">
+      <h1 class="checkout__title">Finalizar compra</h1>
+
+      <section class="checkout__cart" aria-label="Productos en el carrito">
+        <ul id="cart-list" class="cart-list"></ul>
+      </section>
+
+      <section class="checkout__summary" aria-label="Resumen de compra">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="summary-subtotal">$0</span>
+        </div>
+        <div class="summary-row">
+          <span>Envío</span>
+          <span id="summary-shipping">$0</span>
+        </div>
+        <div class="summary-row summary-row--total">
+          <span>Total</span>
+          <span id="summary-total">$0</span>
+        </div>
+      </section>
+
+      <section class="checkout__payment" aria-label="Método de pago">
+        <h2 class="section-title">Selecciona un método de pago</h2>
+
+        <label class="payment-option payment-option--disabled">
+          <input type="radio" name="payment-method" value="card" disabled />
+          <span class="payment-option__icon payment-option__icon--card">💳</span>
+          <span class="payment-option__body">
+            <span class="payment-option__title">Tarjeta crédito / débito</span>
+            <span class="payment-option__hint">No disponible en este demo</span>
+          </span>
+        </label>
+
+        <label class="payment-option" for="payment-pse">
+          <input type="radio" id="payment-pse" name="payment-method" value="pse" />
+          <span class="payment-option__icon payment-option__icon--pse">
+            <img src="assets/logo-pse.png" alt="PSE" />
+          </span>
+          <span class="payment-option__body">
+            <span class="payment-option__title">PSE — Débito a cuenta bancaria</span>
+            <span class="payment-option__hint">Paga directo desde tu banco</span>
+          </span>
+        </label>
+      </section>
+
+      <button id="btn-go-pay" class="btn btn--primary btn--block" disabled>
+        Ir a pagar
+      </button>
+    </main>
+  </section>
+
+  <!-- ===================== PANTALLA 2: CARGA / PROCESANDO (estilo referencia.png) ===================== -->
+  <section id="screen-loading" class="screen">
+    <header class="pse-topbar">
+      <div class="pse-topbar__brand">
+        <img src="assets/logo-pse.png" alt="PSE" class="pse-topbar__logo" />
+        <span class="pse-topbar__slogan">¡Fácil, rápido y seguro!</span>
+      </div>
+    </header>
+
+    <main class="pse-loading">
+      <ol class="pse-stepper" aria-hidden="true">
+        <li class="pse-stepper__step">
+          <span class="pse-stepper__icon">🏬</span>
+        </li>
+        <li class="pse-stepper__connector"></li>
+        <li class="pse-stepper__step">
+          <span class="pse-stepper__icon">🔒</span>
+        </li>
+        <li class="pse-stepper__connector"></li>
+        <li class="pse-stepper__step">
+          <span class="pse-stepper__icon">💬</span>
+        </li>
+        <li class="pse-stepper__connector"></li>
+        <li class="pse-stepper__step">
+          <span class="pse-stepper__icon">🏦</span>
+        </li>
+      </ol>
+
+      <div class="pse-loading__text">
+        <p class="pse-loading__user" id="pse-loading-user">Cliente Tienda Andina</p>
+        <p class="pse-loading__status">Estamos procesando tu transacción...</p>
+      </div>
+
+      <div class="pse-loading__spinner">
+        <img src="assets/logo-pse.png" alt="" class="pse-loading__spinner-logo" />
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <img src="assets/footer.png" alt="ACH Colombia — Para mayor información comunícate con nosotros" />
+    </footer>
+  </section>
+
+  <!-- ===================== PANTALLA 3: LOGIN / REGISTRO ===================== -->
+  <section id="screen-auth" class="screen">
+    <header class="pse-topbar">
+      <div class="pse-topbar__brand">
+        <img src="assets/logo-pse.png" alt="PSE" class="pse-topbar__logo" />
+        <span class="pse-topbar__slogan">¡Fácil, rápido y seguro!</span>
+      </div>
+    </header>
+
+    <main class="auth">
+      <div class="auth-card">
+        <button type="button" class="btn-back" id="btn-auth-back">
+          <span aria-hidden="true">←</span> Atrás
+        </button>
+
+        <div class="auth-tabs" role="tablist">
+          <button class="auth-tab auth-tab--active" id="tab-btn-login" role="tab" aria-selected="true" data-tab="login">
+            Login
+          </button>
+          <button class="auth-tab" id="tab-btn-registro" role="tab" aria-selected="false" data-tab="registro">
+            Registro
+          </button>
+        </div>
+
+        <!-- TAB LOGIN -->
+        <div class="auth-panel auth-panel--active" id="tab-panel-login" role="tabpanel">
+          <p class="form-helper">Selecciona cómo deseas ingresar</p>
+
+          <div class="login-methods">
+            <label class="login-method-option" for="login-method-banco">
+              <input type="radio" id="login-method-banco" name="login-method" value="banco" />
+              <span class="login-method-option__title">Pagar desde mi banco</span>
+              <span class="login-method-option__hint">Ingresa con tu banco afiliado a PSE</span>
+            </label>
+
+            <label class="login-method-option" for="login-method-tarjeta">
+              <input type="radio" id="login-method-tarjeta" name="login-method" value="tarjeta" />
+              <span class="login-method-option__title">Pagar con tarjeta de crédito</span>
+              <span class="login-method-option__hint">Serás redirigido a una plataforma segura de pago</span>
+            </label>
+
+            <label class="login-method-option" for="login-method-credito-pse">
+              <input type="radio" id="login-method-credito-pse" name="login-method" value="credito-pse" />
+              <span class="login-method-option__title">Pagar con crédito sobre PSE</span>
+              <span class="login-method-option__hint">Serás redirigido a la plataforma de crédito PSE</span>
+            </label>
+
+            <label class="login-method-option login-method-option--disabled" for="login-method-portal">
+              <input type="radio" id="login-method-portal" name="login-method" value="portal" disabled />
+              <span class="login-method-option__title">Pagar desde mi portal PSE</span>
+              <span class="login-method-option__hint">Usa tu usuario y contraseña de PSE</span>
+            </label>
+          </div>
+
+          <form id="form-login" class="form" novalidate>
+            <div class="form-row login-fields login-fields--banco" id="fields-banco" hidden>
+              <label for="login-banco">Selecciona tu banco</label>
+              <select id="login-banco" name="banco">
+                <option value="" disabled selected>Selecciona un banco</option>
+                <option value="bancolombia">Bancolombia</option>
+                <option value="davivienda">Davivienda</option>
+                <option value="bbva">BBVA Colombia</option>
+                <option value="bogota">Banco de Bogotá</option>
+                <option value="occidente">Banco de Occidente</option>
+                <option value="nequi">Nequi</option>
+                <option value="daviplata">Daviplata</option>
+              </select>
+
+              <label for="login-banco-email">Correo electrónico</label>
+              <input type="email" id="login-banco-email" name="correoBanco" />
+            </div>
+
+            <div class="form-row login-fields login-fields--portal" id="fields-portal" hidden>
+              <label for="login-usuario">Usuario</label>
+              <input type="text" id="login-usuario" name="usuario" />
+
+              <label for="login-password">Contraseña</label>
+              <input type="password" id="login-password" name="password" />
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--block" id="btn-login-submit" disabled>
+              Ingresar
+            </button>
+          </form>
+
+          <div class="form-success" id="login-success" hidden>
+            <span class="form-success__icon">✅</span>
+            <h2>¡Formulario enviado!</h2>
+            <p>Hemos recibido tu solicitud de ingreso correctamente.</p>
+          </div>
+        </div>
+
+        <!-- TAB REGISTRO -->
+        <div class="auth-panel" id="tab-panel-registro" role="tabpanel">
+          <form id="form-registro" class="form" novalidate>
+            <div class="form-row">
+              <label for="reg-tipo-doc">Tipo de identificación</label>
+              <select id="reg-tipo-doc" name="tipoDocumento" required>
+                <option value="" disabled selected>Selecciona un tipo</option>
+                <option value="CC">Cédula de ciudadanía</option>
+                <option value="CE">Cédula de extranjería</option>
+                <option value="NIT">NIT</option>
+                <option value="PA">Pasaporte</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="reg-num-doc">Número de identificación</label>
+              <input type="text" id="reg-num-doc" name="numeroDocumento" inputmode="numeric" required />
+            </div>
+
+            <div class="form-row">
+              <label for="reg-email">Correo electrónico</label>
+              <input type="email" id="reg-email" name="correo" required />
+            </div>
+
+            <div class="form-row form-row--split">
+              <div>
+                <label for="reg-nombre1">Primer nombre</label>
+                <input type="text" id="reg-nombre1" name="nombre1" required />
+              </div>
+              <div>
+                <label for="reg-nombre2">Segundo nombre</label>
+                <input type="text" id="reg-nombre2" name="nombre2" />
+              </div>
+            </div>
+
+            <div class="form-row form-row--split">
+              <div>
+                <label for="reg-apellido1">Primer apellido</label>
+                <input type="text" id="reg-apellido1" name="apellido1" required />
+              </div>
+              <div>
+                <label for="reg-apellido2">Segundo apellido</label>
+                <input type="text" id="reg-apellido2" name="apellido2" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label for="reg-celular">Celular</label>
+              <input type="tel" id="reg-celular" name="celular" inputmode="numeric" required />
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--block">Registrarme</button>
+          </form>
+
+          <div class="form-success" id="registro-success" hidden>
+            <span class="form-success__icon">✅</span>
+            <h2>¡Formulario enviado!</h2>
+            <p>Hemos recibido tus datos de registro correctamente.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <img src="assets/footer.png" alt="ACH Colombia — Para mayor información comunícate con nosotros" />
+    </footer>
+  </section>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

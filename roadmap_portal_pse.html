@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap Portal PSE — ACH Colombia</title>
+<style>
+:root {
+  --navy: #0D1B2A;
+  --navy-mid: #112336;
+  --navy-light: #172f45;
+  --blue: #005FA3;
+  --blue-dark: #004A80;
+  --blue-light: #A8C4D8;
+  --blue-pale: #EEF4FB;
+  --white: #ffffff;
+  --text-muted: #64748b;
+  --text-dim: #94a3b8;
+  --text-mid: #cbd5e1;
+  --border: rgba(168,196,216,0.15);
+  --ola0: #37474F;
+  --ola1: #1A56A0;
+  --ola2: #00695C;
+  --ola3: #5B21B6;
+  --ola4: #B45309;
+  --b2c: #1d6fa4;
+  --b2b: #166534;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Calibri', 'Segoe UI', system-ui, sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── HEADER ── */
+.header {
+  position: sticky; top:0; z-index:200;
+  background: var(--navy);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+}
+.header-brand { display:flex; align-items:center; gap:12px; }
+.pse-badge {
+  background: var(--blue); color:white;
+  font-size:11px; font-weight:800; letter-spacing:.12em;
+  padding:5px 10px; border-radius:5px;
+  text-transform:uppercase;
+}
+.header-title { font-size:16px; font-weight:700; }
+.header-sub { font-size:11px; color:var(--blue-light); margin-top:1px; }
+.header-legend { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.leg { display:flex; gap:6px; align-items:center; font-size:11px; color:var(--text-dim); }
+.leg-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* ── SCROLL WRAPPER ── */
+.board {
+  overflow-x: auto;
+  padding: 20px 24px 40px;
+  scrollbar-width: thin;
+  scrollbar-color: #334155 var(--navy);
+}
+.board::-webkit-scrollbar { height:6px; }
+.board::-webkit-scrollbar-track { background: var(--navy); }
+.board::-webkit-scrollbar-thumb { background: #334155; border-radius:3px; }
+
+/* ── OLA COLUMNS ── */
+.olas-row { display:flex; gap:14px; align-items:flex-start; min-width:max-content; }
+
+.ola-col {
+  width: 272px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  flex-shrink:0;
+  display:flex; flex-direction:column;
+}
+
+.ola-head {
+  padding: 14px 16px 12px;
+  position: relative;
+}
+.ola-eyebrow {
+  font-size:9px; font-weight:800; letter-spacing:.18em;
+  text-transform:uppercase; opacity:.75; margin-bottom:3px;
+}
+.ola-name { font-size:15px; font-weight:800; line-height:1.25; }
+.ola-sub { font-size:11px; opacity:.65; margin-top:2px; }
+.ola-desc {
+  margin-top:8px;
+  font-size:10px;
+  line-height:1.45;
+  color:rgba(255,255,255,0.86);
+}
+.ola-periodo {
+  display:inline-flex; align-items:center; gap:4px;
+  margin-top:8px;
+  font-size:10px; font-weight:600;
+  background: rgba(255,255,255,0.12);
+  padding:3px 9px; border-radius:20px;
+}
+.ola-stretch {
+  display:inline-block;
+  margin-left:6px;
+  font-size:9px; font-weight:700; letter-spacing:.06em;
+  background: rgba(255,255,255,0.15);
+  padding:2px 7px; border-radius:3px;
+  vertical-align:middle;
+}
+
+.ola-body { padding:12px; flex:1; }
+
+/* ── HABILITACIÓN ── */
+.section-label {
+  display:flex; align-items:center; gap:6px;
+  font-size:9px; font-weight:800; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--blue-light);
+  margin-bottom:7px;
+}
+.section-label::after {
+  content:''; flex:1; height:1px;
+  background: var(--border);
+}
+.hab-list { list-style:none; margin-bottom:14px; }
+.hab-item {
+  font-size:11px; color:#6b7f94;
+  padding:4px 0 4px 13px; position:relative;
+  line-height:1.45;
+  border-bottom:1px solid rgba(255,255,255,0.035);
+}
+.hab-item:last-child { border-bottom:none; }
+.hab-item::before { content:'›'; position:absolute; left:0; color:var(--blue); opacity:.6; }
+
+/* ── CU CARDS ── */
+.cu-stack { display:flex; flex-direction:column; gap:5px; }
+
+.cu-card {
+  background: rgba(255,255,255,0.05);
+  border:1px solid rgba(168,196,216,0.1);
+  border-radius:8px; padding:9px 11px;
+  cursor:pointer;
+  transition: background .15s, border-color .15s, transform .15s;
+  display:flex; flex-direction:column; gap:4px;
+}
+.cu-card:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(168,196,216,0.28);
+  transform: translateY(-1px);
+}
+.cu-card.is-active {
+  border-color: var(--blue);
+  background: rgba(0,95,163,0.14);
+}
+.cu-row { display:flex; align-items:flex-start; justify-content:space-between; gap:6px; }
+.cu-name {
+  font-size:9px;
+  font-weight:800;
+  color:#60a5fa;
+  line-height:1.2;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  opacity:.9;
+  flex:1;
+}
+.cu-tags { display:flex; gap:3px; flex-shrink:0; align-items:center; }
+.tag {
+  font-size:9px; font-weight:800; padding:2px 6px;
+  border-radius:3px; letter-spacing:.04em; white-space:nowrap;
+}
+.tag-b2c { background:rgba(29,111,164,0.28); color:#93c5fd; border:1px solid rgba(29,111,164,0.4); }
+.tag-b2b { background:rgba(22,101,52,0.28); color:#86efac; border:1px solid rgba(22,101,52,0.4); }
+.tag-num { background:rgba(255,255,255,0.07); color:#64748b; border:1px solid rgba(255,255,255,0.08); }
+.cu-alcance { font-size:12px; font-weight:500; color:var(--white); line-height:1.5; }
+
+/* ── OVERLAY + PANEL ── */
+.overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.55); z-index:400;
+  backdrop-filter: blur(2px);
+}
+.overlay.on { display:block; }
+
+.panel {
+  position:fixed; top:0; right:-540px; width:520px;
+  height:100vh; overflow-y:auto;
+  background: #0c1e2f;
+  border-left:1px solid rgba(168,196,216,0.18);
+  z-index:500;
+  transition: right .28s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column;
+}
+.panel.on { right:0; }
+
+.panel-top {
+  padding:20px 22px 16px;
+  border-bottom:1px solid var(--border);
+  position:sticky; top:0;
+  background: #0c1e2f; z-index:10;
+}
+.panel-close {
+  position:absolute; top:16px; right:16px;
+  background:rgba(255,255,255,0.07); border:none;
+  color:var(--text-dim); width:28px; height:28px;
+  border-radius:6px; cursor:pointer; font-size:15px;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .15s;
+}
+.panel-close:hover { background:rgba(255,255,255,0.14); color:white; }
+.panel-num { font-size:10px; font-weight:800; letter-spacing:.18em; color:var(--blue-light); margin-bottom:5px; text-transform:uppercase; }
+.panel-title { font-size:19px; font-weight:800; line-height:1.25; padding-right:36px; margin-bottom:10px; }
+.panel-badges { display:flex; flex-wrap:wrap; gap:5px; align-items:center; }
+.badge {
+  font-size:10px; font-weight:700; padding:3px 8px;
+  border-radius:4px; white-space:nowrap;
+}
+.badge-obj { background:rgba(0,95,163,.2); color:#93c5fd; border:1px solid rgba(0,95,163,.3); }
+.badge-av { background:rgba(255,255,255,.06); color:#64748b; border:1px solid rgba(255,255,255,.09); }
+.badge-val { background:rgba(34,197,94,.1); color:#86efac; border:1px solid rgba(34,197,94,.18); }
+.badge-ing { background:rgba(234,179,8,.1); color:#fde047; border:1px solid rgba(234,179,8,.15); }
+.badge-am { font-weight:800; }
+.am-low { background:rgba(34,197,94,.1); color:#86efac; border:1px solid rgba(34,197,94,.18); }
+.am-mid { background:rgba(234,179,8,.1); color:#fde047; border:1px solid rgba(234,179,8,.15); }
+.am-high { background:rgba(239,68,68,.13); color:#fca5a5; border:1px solid rgba(239,68,68,.2); }
+
+.panel-body { padding:18px 22px 24px; flex:1; }
+.p-section { margin-bottom:18px; }
+.p-stitle {
+  font-size:9px; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--blue-light); padding-bottom:6px; margin-bottom:7px;
+  border-bottom:1px solid var(--border);
+}
+.p-desc { font-size:13px; color:var(--text-mid); line-height:1.7; }
+.p-list { list-style:none; }
+.p-list li {
+  font-size:12px; color:var(--text-dim); padding:5px 0 5px 16px;
+  position:relative; line-height:1.5;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.p-list li:last-child { border-bottom:none; }
+.p-list li::before { content:'→'; position:absolute; left:0; color:var(--blue); font-size:11px; }
+.p-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+.p-stat {
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);
+  border-radius:7px; padding:9px 11px;
+}
+.p-stat-lbl { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#475569; margin-bottom:3px; }
+.p-stat-val { font-size:13px; font-weight:700; color:white; }
+.p-stat-val.g { color:#4ade80; }
+.p-stat-val.y { color:#fbbf24; }
+.p-threat { height:4px; background:rgba(255,255,255,.08); border-radius:2px; overflow:hidden; margin-top:5px; }
+.p-threat-fill { height:100%; border-radius:2px; }
+.p-alcance-box {
+  background: rgba(0,95,163,.08);
+  border:1px solid rgba(0,95,163,.2);
+  border-radius:8px; padding:10px 13px;
+}
+.p-alcance-lbl { font-size:9px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#60a5fa; margin-bottom:4px; }
+.p-alcance-txt { font-size:12px; color:#93c5fd; line-height:1.5; }
+.p-mkt-item {
+  font-size:12px; color:var(--text-mid); line-height:1.55;
+  padding:5px 0; border-bottom:1px solid rgba(255,255,255,.05);
+}
+.p-mkt-item:last-child { border-bottom:none; }
+.p-mkt-item strong { color:#60a5fa; }
+.p-comp-chips { display:flex; flex-wrap:wrap; gap:5px; }
+.p-comp-chip {
+  font-size:11px; color:#64748b;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  padding:3px 9px; border-radius:20px;
+}
+
+/* ── SCROLL HINT ── */
+.scroll-hint {
+  text-align:center; padding:8px 0;
+  font-size:11px; color:#334155; letter-spacing:.06em;
+}
+
+/* ── VISION SECTION ── */
+.vision {
+  background: linear-gradient(135deg, rgba(13,27,42,0.8), rgba(23,47,69,0.8));
+  border-bottom: 1px solid rgba(168,196,216,0.15);
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.vision-content {
+  font-size: 13px;
+  line-height: 1.65;
+  color: #cbd5e1;
+}
+.vision-intro {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+.vision-criteria {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+  list-style: none;
+  padding: 0;
+}
+.vision-criteria li {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(168,196,216,0.15);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.vision-criteria li strong {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.3;
+}
+.vision-criteria li span {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #94a3b8;
+  font-weight: 400;
+}
+.vision-footer {
+  margin-top: 18px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(168,196,216,0.15);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 12px;
+  font-style: italic;
+  color: #60a5fa;
+  text-align: center;
+  font-weight: 500;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <span class="pse-badge">PSE</span>
+    <div>
+      <div class="header-title">Roadmap Portal PSE — Nueva Plataforma ACH</div>
+      <div class="header-sub">18 meses · Q3 2026 → Q1 2028 · 5 olas de implementación · 25 casos de uso</div>
+    </div>
+  </div>
+  <div class="header-legend">
+    <div class="leg"><span class="leg-dot" style="background:#93c5fd"></span>B2C — Persona Natural</div>
+    <div class="leg"><span class="leg-dot" style="background:#86efac"></span>B2B — Persona Jurídica</div>
+    <div class="leg"><span class="leg-dot" style="background:#64748b"></span>Habilitación</div>
+    <div class="leg" style="font-size:10px;color:#475569;">Clic en cada CU para ver la ficha →</div>
+  </div>
+</header>
+
+<section class="vision">
+  <div class="vision-content">
+    <div class="vision-intro">
+      PSE deja de ser un canal de pago para convertirse en una plataforma de capacidades financieras reutilizables: un hub que conecta personas, empresas y el ecosistema financiero colombiano alrededor del movimiento de dinero, independientemente del canal, el instrumento o el caso de uso. La nueva arquitectura desacopla la infraestructura y abre la oportunidad de interoperar y fortalecer el ecosistema ACH Completo, lo que permite crear, escalar o retirar experiencias sin tocar los cimientos — y hace posible que la misma plataforma que hoy procesa un pago de servicios públicos mañana ejecute una instrucción de un agente de inteligencia artificial en el futuro.
+    </div>
+    <ul class="vision-criteria">
+      <li><strong>Desacoplada por diseño</strong><span>La tecnología ya no está amarrada a un caso de uso específico. Un único mecanismo de débito, un único mecanismo de crédito y una reversión estándar reemplazan los múltiples canales y silos actuales. Cualquier servicio nuevo se construye sobre esas capacidades sin reescribirlas.</span></li>
+      <li><strong>Modular y escalable</strong><span>Cada capacidad es una unidad independiente, parametrizable y potencialmente vendible como marca blanca a terceros — bancos, cooperativas, fintechs. El sistema se diseña para N productos y N casos de uso, no para los que existen hoy.</span></li>
+      <li><strong>Un solo punto de conexión</strong><span>Bancos, pasarelas, comercios y personas se integran una sola vez. La plataforma enruta, orquesta y resuelve internamente la complejidad del ecosistema de 49 entidades, sin trasladarla al integrador.</span></li>
+      <li><strong>Orientada al iniciador, no al canal</strong><span>La plataforma identifica quién inicia la transacción — persona, empresa o comercio — y no el canal por el que llega. Ese conocimiento del iniciador es la base del control de fraude, el KYC continuo y la personalización real.</span></li>
+      <li><strong>Experiencia en el centro</strong><span>El Portal PSE pone al usuario en contacto directo con ACH por primera vez: autenticación propia, historial consolidado, múltiples instrumentos de pago, gestión de facturas, agregación de cuentas y analítica financiera — todo desde un único lugar, con la fricción que cada contexto requiere y no más.</span></li>
+      <li><strong>Datos como activo estratégico</strong><span>Un DataLake unificado reemplaza los silos de reportería por producto. Los datos curados son la materia prima del gestor financiero con IA, del marketing de pagos, del scoring crediticio y de la oferta de valor a comercios — no un subproducto de la operación.</span></li>
+      <li><strong>Alianzas sobre dependencias</strong><span>La plataforma se construye primero con los actores más ágiles del ecosistema — fintechs, billeteras — y se expande hacia los más lentos. Las alianzas se negocian desde una posición de valor, no de permiso.</span></li>
+      <li><strong>Preparada para lo que viene</strong><span>La arquitectura soporta Open Finance, pagos inmediatos (Bre-B), iniciación de pagos (RtP), pagos crossborder, escrow digital y pagos agénticos sin necesidad de refactoring. Cada ola de innovación encuentra la infraestructura lista.</span></li>
+      <li><strong>Construida para evolucionar sin detener</strong><span>El edificio nuevo se levanta mientras el actual sigue operando. La migración es gradual, validada y reversible. La velocidad de producto deja de depender del monolito.</span></li>
+    </ul>    
+  </div>
+</section>
+
+<div class="board">
+  <div class="scroll-hint">← Desplaza horizontalmente para ver todas las olas →</div>
+  <div class="olas-row" id="olas-row"></div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+<div class="panel" id="panel">
+  <div class="panel-top">
+    <button class="panel-close" onclick="closePanel()">✕</button>
+    <div class="panel-num" id="p-num"></div>
+    <div class="panel-title" id="p-title"></div>
+    <div class="panel-badges" id="p-badges"></div>
+  </div>
+  <div class="panel-body" id="p-body"></div>
+</div>
+
+<script>
+/* ===== DATA ===== */
+const fichas = {
+  1:{nombre:"Iniciación del pago / Formas de pago",segmento:"B2C",descripcion:"Unificación de todos los instrumentos de pago disponibles en un único flujo de iniciación desde el Portal PSE. El usuario elige el instrumento; PSE orquesta la ejecución sin depender del banco o pasarela para definir qué opciones están disponibles. La tecnología subyacente (PSE, Bre-B, RtP) es transparente para el usuario.",objetivo:"Defender y Escalar el Negocio",avance:20,trabajos:["Usuario debe saber de antemano qué instrumento usar — PSE no ofrece alternativas en el momento del pago","Si el banco no admite cierto instrumento, la transacción falla sin alternativa automática","Los comercios gestionan múltiples integraciones para ofrecer distintas formas de pago","PSE no tiene visibilidad del instrumento real: todo llega como 'débito cuenta'"],casos:["Selección de instrumento en tiempo real (cuenta, tarjeta, llave, billetera, BNPL)","Redirección automática a instrumento alternativo si el primero falla o no tiene fondos","Pago crossborder: usuario en Colombia paga con cuenta colombiana al exterior","Motor de reglas para selección óptima según monto, disponibilidad y costo"],mercado:["PSE procesó 236M operaciones en Q1 2026, +12% vs 2025, movilizando ~$910 billones (ACH Colombia, abr. 2026)","35% de compradores abandona el carrito si su método preferido no está disponible (Tiendanube, 2026)"],amenaza:8,ingreso:"Alto",validacion:"Sí",competencia:["PayU, Mercado Pago, Wompi, Kushki","Nequi / Daviplata","Bre-B"]},
+  2:{nombre:"Cash-Out ACH / Cajeros",segmento:"B2C",descripcion:"El usuario puede retirar efectivo en una red de aliados (corresponsales, cajeros, puntos de pago) usando PSE como instrumento, sin necesidad de tarjeta débito tradicional. PSE actúa como cashier: gestiona la autorización, el débito y coordina la dispersión al punto físico.",objetivo:"Expandir Alcance / Inclusión Financiera",avance:5,trabajos:["Usuario bancarizado sin tarjeta débito no puede retirar efectivo fácilmente","Dependencia total de la red de cajeros propios del banco","PSE hoy no tiene presencia en el canal físico — invisible en el día a día del usuario","Fondos en PSE, BNPL o remesas no convertibles a efectivo de forma directa"],casos:["Retiro mediante código QR o código de un solo uso generado en el portal","Cashout desde cuenta de ahorros, billetera PSE o fondos precargados","Límites diferenciados por instrumento","Historial de retiros integrado al portal"],mercado:["95.4% de adultos colombianos con al menos un producto financiero (36.7M personas), muchos sin tarjeta física activa (Banca de Oportunidades, 2024)","Red de corresponsales supera los 200.000 puntos en Colombia"],amenaza:5,ingreso:"Medio",validacion:"Parcial",competencia:["Nequi / Daviplata (cashout en corresponsales)","Efecty / Baloto","Tarjetas débito (canal dominante de retiro)"]},
+  3:{nombre:"Tarjeta débito prepago / Fondos en PSE",segmento:"B2C",descripcion:"Tarjeta prepago (física o virtual) respaldada por PSE, cargada desde cualquier cuenta agregada. No es una tarjeta de un banco específico: los fondos provienen de múltiples cuentas registradas en el portal. Opera bajo modelo de sponsor, lo que permite a PSE controlar la experiencia sin asumir la responsabilidad regulatoria de emisor.",objetivo:"Crear Nuevo Valor / Expandir Presencia Cotidiana",avance:5,trabajos:["PSE no tiene presencia en el punto de venta físico","Gestionar múltiples tarjetas de múltiples bancos genera fricción real","Fondos en billetera PSE o BNPL no son utilizables en comercios físicos","Usuario multi-cuenta no tiene un instrumento unificado para el día a día"],casos:["Tarjeta virtual para pagos digitales inmediatos, activada desde el portal","Tarjeta física emitida por banco sponsor con logo PSE o marca blanca","Carga desde cualquier cuenta agregada (ahorros, corriente, depósito electrónico)","Soporte multimoneda para pagos en el exterior"],mercado:["PSE tiene más de 27M usuarios registrados — base instalada para adopción de tarjeta propia (Portafolio, 2025)","Mercado tarjetas prepago LATAM crece a CAGR 14% hacia 2028 (GlobalData, 2024)"],amenaza:7,ingreso:"Medio-Alto",validacion:"Sí",competencia:["Nequi, Daviplata (tarjeta virtual propia)","Nu (Nubank)","Ualá"]},
+  4:{nombre:"Agregación de cuentas / Open Finance",segmento:"B2C",descripcion:"El portal PSE permite agregar y visualizar cuentas de múltiples entidades en un único lugar. Es el núcleo del hub financiero. La implementación empieza con participantes que ya tienen APIs expuestas (fintechs, billeteras), sin esperar regulación completa de Open Finance.",objetivo:"Construir el Hub / Fundación del Portal",avance:10,trabajos:["El usuario no tiene visión consolidada de sus finanzas — cada banco es una app separada","PSE no conoce el saldo disponible antes de la transacción — genera rechazos evitables","Sin agregación, no es posible ofrecer multi-débito, gestor financiero ni rentabilización","PSE no puede personalizar sin conocer el perfil financiero completo del usuario"],casos:["H1: Cuentas locales + billeteras; consulta de saldo; cross-selling básico","H2: Cuentas internacionales y fondos de inversión abiertos","H3: Billeteras cripto","Habilitador de toda la capa de inteligencia financiera del portal"],mercado:["36.7M adultos colombianos con al menos un producto financiero — mayoría en más de una entidad (Banca de Oportunidades, 2024)","Open Finance regulado bajo Decreto 1297 de 2022, en implementación desde 2024"],amenaza:6,ingreso:"Medio → Alto (H2-H3)",validacion:"Sí",competencia:["Finerio y apps de PFM","Bancos con vistas consolidadas propias","Apple Wallet, Google Pay"]},
+  5:{nombre:"Crédito PSE / BNPL",segmento:"B2C",descripcion:"PSE intermedia crédito inmediato (BNPL) como instrumento de pago nativo en el portal. El usuario puede solicitar, recibir ofertas, pagar cuotas y gestionar su deuda desde un único lugar. ACH puede operar como intermediador sin asumir el riesgo crediticio.",objetivo:"Crear Nuevo Valor / Aumentar Conversión",avance:5,trabajos:["Usuario sin tarjeta de crédito no puede diferir pagos en eCommerce colombiano","PSE pierde transacciones cuando el usuario no tiene fondos disponibles en el momento","No existe mecanismo nativo de 'me falta plata, pido el préstamo para completar el pago'","El usuario debe salir del flujo PSE para buscar financiamiento en otro lugar"],casos:["BNPL como opción de pago nativa en el checkout del portal","Solicitud de crédito en tiempo real con respuesta inmediata","Gestión de deuda: cuotas, historial, alertas de vencimiento","Cross-selling con oferta financiera según perfil transaccional"],mercado:["BNPL en Colombia creció a CAGR de 53.4% (2021-2024); proyectado CAGR 24.8% hacia 2030 ≈ USD 6.33B (ResearchAndMarkets, feb. 2025)","Colombia registra 7.7M cuentas activas BNPL (DataCrédito Experian, 2024)"],amenaza:7,ingreso:"Alto",validacion:"Sí",competencia:["Addi (+1.5M clientes activos)","Rappi Pay, Sistecrédito","Tarjetas de crédito bancarias con cuotas sin interés"]},
+  6:{nombre:"Gestión de facturas",segmento:"B2C",descripcion:"El portal centraliza todas las facturas del usuario (servicios públicos, telco, educación, salud, impuestos) en un único lugar. Puede inscribirlas, pagar manualmente, programar débitos automáticos o masivos. El comercio puede iniciar el cobro sin intervención previa del usuario (RtP).",objetivo:"Presencia Cotidiana / Defender Recaudo",avance:15,trabajos:["El usuario gestiona pagos en plataformas dispersas — no hay un hub centralizado","PSE no tiene recurrencia nativa — cada pago requiere intervención activa del usuario","Los comercios no pueden iniciar un cobro sin que el usuario pase por el flujo completo","No hay visibilidad de vencimientos ni alertas proactivas en el ecosistema actual"],casos:["Inscripción de facturas recurrentes con un clic","Débito automático (domiciliación) programado por el usuario","Cobro iniciado por el comercio (RtP): solicitud de pago al portal del usuario","Alertas de vencimiento e integración con calendario financiero"],mercado:["Obligaciones financieras, servicios públicos y apuestas son las categorías de mayor crecimiento en PSE (La República, 2025)","+50M facturas mensuales de servicios públicos domiciliarios en Colombia (SSPD/DANE, 2023)"],amenaza:8,ingreso:"Alto",validacion:"Sí",competencia:["Aplicaciones bancarias con pago de servicios","Rappipay, Nequi","Bre-B con RtP nativo — amenaza directa e inmediata"]},
+  7:{nombre:"Gestión financiera general",segmento:"B2C",descripcion:"Capa analítica del portal PSE. Con la agregación de cuentas como base, el usuario accede a historial consolidado, analítica de vida financiera y un gestor financiero con IA que puede ejecutar acciones. El PSE agéntico es la evolución final de este caso de uso.",objetivo:"Diferenciación / Retención de Usuarios",avance:5,trabajos:["El usuario no tiene visión integrada de ingresos y gastos — múltiples apps desconectadas","No existe orientación proactiva sobre salud financiera dentro del ecosistema PSE","PSE conoce el comportamiento transaccional del usuario pero no lo convierte en valor","Gestores financieros existentes son genéricos y no conectados al momento de pago"],casos:["Dashboard personal de ingresos, gastos y saldo consolidado","Categorización automática de gastos con alertas proactivas","Gestor financiero con IA: 'toma mis cuentas, paga mis facturas e invierte el excedente'","PSE agéntico: ejecución de pagos y compras por instrucción en lenguaje natural"],mercado:["PSE tiene datos transaccionales de +13M usuarios activos — activo diferencial único (ACH Colombia, 2025)","Mercado global PFM proyectado en USD 1.9B para 2028 (MarketsandMarkets, 2024)"],amenaza:4,ingreso:"Medio → Alto indirecto",validacion:"Parcial",competencia:["Finerio, Spendee (sin vínculo al pago)","Bancos con analítica propia restringida","Nequi (gestor básico en billetera)"]},
+  8:{nombre:"Pago de planilla / Prestaciones sociales",segmento:"B2C",descripcion:"PSE como instrumento de pago de aportes a seguridad social para trabajadores independientes y colombianos en el exterior. ACH tiene ventaja regulatoria histórica en este segmento. La renovación incorpora BNPL para independientes y habilita pago desde múltiples instrumentos.",objetivo:"Defender Ventaja Regulatoria / Modernizar Core",avance:25,trabajos:["Flujo de pago PILA actual es extenso, con múltiples pasos y sin retroalimentación clara","El independiente sin dinero disponible en la fecha no tiene alternativa de financiamiento","Colombianos en el exterior no pueden pagar fácilmente desde cuentas extranjeras","No hay historial de aportes ni alertas de vencimiento en el ecosistema PSE"],casos:["Pago de aportes con cuenta, tarjeta, BNPL o instrumento crossborder","Financiamiento del aporte vía BNPL para independientes con flujo irregular","Domiciliación automática del aporte mensual","Historial de seguridad social integrado al portal"],mercado:["+3.5M trabajadores independientes obligados a cotizar en Colombia (MinTrabajo, 2023)","PSE es el canal dominante del recaudo PILA — posición regulatoria directa a defender"],amenaza:5,ingreso:"Medio",validacion:"Sí",competencia:["Aportes en Línea (mayor cuota PILA digital)","Bancos con módulo PILA integrado","Bre-B (futuro competidor en este segmento)"]},
+  9:{nombre:"Remesas",segmento:"B2C",descripcion:"PSE habilita la recepción de remesas del exterior directamente en el portal, con opciones de disposición inmediata: pago de facturas, consignación en cuenta, cashout en red de aliados o recarga de tarjeta PSE. El receptor no necesita ir a una casa de cambio.",objetivo:"Expandir Alcance / Nuevo Segmento",avance:5,trabajos:["El receptor debe ir a un punto físico o esperar acreditación bancaria para disponer del dinero","No hay un lugar centralizado donde gestionar remesas junto al resto de la vida financiera","Costos de transacción elevados sin canales digitales optimizados","PSE no capta ningún valor del flujo de remesas que llega al país"],casos:["Notificación en tiempo real de nueva remesa disponible en el portal","Disposición inmediata: pago de factura, transferencia a cuenta, cashout con aliado","Recarga de tarjeta PSE prepago con fondos de remesa","Envío de remesas desde Colombia al exterior (H2)"],mercado:["Colombia proyectó cerrar 2024 con ~USD 11.800M en remesas, +17.1% vs 2023 (Corficolombiana, 2024)","2.1M colombianos recibían remesas en junio 2024, con promedio mensual de USD 470-506/receptor (Banco de la República, 2024)"],amenaza:6,ingreso:"Alto",validacion:"Parcial",competencia:["Wise, Remitly, Global66 (UX superior, costos bajos)","Western Union, MoneyGram (red física dominante)","Nequi (remesas internacionales desde 2023)"]},
+  10:{nombre:"Depósito en garantía / Escrow digital",segmento:"B2C",descripcion:"PSE realiza el débito al momento de la compra pero retiene los fondos hasta que se cumple una condición de negocio definida (entrega confirmada, servicio prestado). Los fondos se liberan automáticamente al activar la regla de negocio. Elimina el riesgo de fraude entre partes que no se conocen.",objetivo:"Crear Nuevo Valor / Diferenciación",avance:3,trabajos:["En eCommerce sin escrow, el comprador paga y asume el riesgo de no recibir","El vendedor despacha y asume el riesgo de reversión o fraude","Plataformas de transporte no tienen mecanismo estándar para cobro variable","PSE no tiene presencia en el ciclo completo de la transacción"],casos:["eCommerce C2C: débito al comprar, liberación al confirmar entrega","Plataformas de transporte: cobro estimado + ajuste final por distancia/tiempo","Servicios profesionales: pago liberado por hitos o entregables","Alquileres de corto plazo: garantía retenida hasta devolución del bien"],mercado:["Ventas online en Colombia alcanzaron COP $145.4B en 2025 con 684.6M transacciones (CCCE/NubeCommerce, 2026)","Mercado global de escrow digital proyectado en USD 4.7B para 2027 (Allied Market Research)"],amenaza:3,ingreso:"Medio",validacion:"Parcial",competencia:["Mercado Pago (escrow nativo en marketplace)","PayU (garantías en eCommerce)","No existe escrow interoperable asequible en Colombia B2C"]},
+  11:{nombre:"Marketing de pagos",segmento:"B2C",descripcion:"PSE habilita un canal para que organizaciones ofrezcan descuentos, cashback y beneficios dirigidos a usuarios del portal, basados en su comportamiento transaccional. ACH monetiza su capacidad de segmentación sobre datos anonimizados.",objetivo:"Monetizar Datos / Generar Fidelización",avance:5,trabajos:["PSE tiene datos transaccionales valiosos que no generan valor para el usuario ni para los comercios","Los comercios no tienen acceso a audiencias segmentadas por comportamiento de pago real","El usuario no recibe incentivos por usar PSE frente a otros métodos de pago","No hay mecanismo de fidelización que genere recurrencia activa"],casos:["Cashback automático al pagar con PSE en comercios aliados","Descuentos exclusivos visibles antes y durante el checkout","Segmentación por categoría de gasto para ofertas relevantes","Puntos de fidelización acumulables y redimibles en el ecosistema"],mercado:["PSE mueve ~COP $56B mensuales — audiencia de alto valor para cualquier anunciante (La República, 2025)","30.451 empresas vinculadas a PSE — base instalada de potenciales anunciantes (ACH Colombia, 2025)"],amenaza:4,ingreso:"Medio-Alto",validacion:"Sí",competencia:["Puntos Colombia / Lifemiles","Rappi Pay / Nequi (ecosistema cerrado)","Tarjetas de crédito con cashback"]},
+  24:{nombre:"Zona Segura PSE",segmento:"B2C",descripcion:"Espacio de control dentro del Portal PSE para configurar reglas de negocio y seguridad por perfil de riesgo. Permite definir condiciones transaccionales con base en localización, entidades autorizadas, tiendas de confianza, horarios, límites de monto y frecuencia de operación.",objetivo:"Proteger la Operación / Control Preventivo",avance:5,trabajos:["El usuario no puede personalizar reglas de seguridad según su comportamiento y contexto","Las restricciones de uso suelen ser estáticas y no contemplan geolocalización ni comercios de confianza","No existe una capa central de límites dinámicos por monto, cantidad y horario","PSE requiere reducir fraude y fricción con controles preventivos configurables"],casos:["Reglas por ubicación: permitir/bloquear transacciones según ciudad, país o zona","Whitelist/blacklist de entidades y comercios de confianza","Ventanas horarias de operación y bloqueo fuera de horario definido","Límites por monto máximo, cantidad de transacciones y acumulado diario/semanal"],mercado:["El crecimiento de pagos digitales incrementa la necesidad de controles preventivos configurables por usuario","La personalización de seguridad mejora confianza, reduce fraude y mantiene conversión en el checkout"],amenaza:7,ingreso:"Alto indirecto",validacion:"Parcial",competencia:["Controles de seguridad en apps bancarias tradicionales","Motores antifraude de pasarelas y wallets","Funciones de bloqueo por geolocalización en emisores internacionales"]},
+  XX:{nombre:"Motor antifraude adaptativo",segmento:"B2C",descripcion:"Capa de seguridad transaccional para el Portal PSE que alimenta continuamente el nuevo motor de detección de fraudes con señales de comportamiento, contexto de dispositivo y patrones de pago. Permite prevención en tiempo real y decisiones de riesgo dinámicas por transacción.",objetivo:"Proteger la Operación / Reducir Fraude",avance:5,trabajos:["Los controles antifraude actuales son fragmentados y reaccionan tarde ante patrones emergentes","PSE necesita consolidar señales de riesgo para bloquear fraude sin afectar conversión","No existe un ciclo de aprendizaje continuo del motor con retroalimentación de intentos y resultados","Los comercios y usuarios no tienen un esquema homogéneo de autenticación por nivel de riesgo"],casos:["Scoring de riesgo en tiempo real por intento de pago","Autenticación escalonada según riesgo (frictionless vs desafío)","Retroalimentación automática del motor con transacciones aprobadas, rechazadas y reversadas","Alertas tempranas de anomalías por usuario, comercio y canal"],mercado:["El fraude en pagos digitales crece con el aumento del volumen transaccional y exige controles adaptativos en tiempo real","La diferenciación por seguridad y baja fricción es clave para sostener crecimiento en pagos en línea"],amenaza:9,ingreso:"Alto indirecto",validacion:"Parcial",competencia:["Motores antifraude bancarios propietarios","Pasarelas con scoring de riesgo (Stripe Radar, Adyen RevenueProtect)","Bre-B con controles nativos de riesgo en evolución"]},
+  12:{nombre:"Tarjeta corporativa / Des-salarización",segmento:"B2B",descripcion:"La empresa emite tarjetas prepagas (físicas o virtuales) para colaboradores, cargadas desde cuentas corporativas en el portal PSE. Casos clave: viáticos, gastos de representación, alimentación y des-salarización (gasolina, alimentación). Panel de administración centralizado.",objetivo:"Crear Nuevo Valor / Simplificar Operación Corporativa",avance:5,trabajos:["Gestión de viáticos en efectivo es opaca, incontrolable y genera fraude interno","La des-salarización requiere procesos manuales complejos con nómina y contabilidad","Los anticipos de gastos generan descuadres de caja y legalizaciones costosas","Sin visibilidad en tiempo real de qué compra el colaborador ni dónde"],casos:["Tarjeta de viáticos: carga automática por evento o período; control de categorías","Tarjeta de regalo corporativa para incentivos o temporadas","Des-salarización: gasolina, alimentación — exenta de parafiscales bajo condiciones legales","Panel de administración: emisión, bloqueo, recarga y reportes en tiempo real"],mercado:["+10M trabajadores formales en el sector privado colombiano (DANE, 2024)","Mercado global de tarjetas prepago corporativas crece a CAGR 16.5% hacia 2028 (MarketsandMarkets, 2023)"],amenaza:6,ingreso:"Medio-Alto",validacion:"Parcial",competencia:["Pluxee (ex Sodexo), Edenred (líderes en des-salarización)","Rappi for Business","Bancos con tarjeta empresarial de nómina"]},
+  13:{nombre:"Agregación de cuentas empresarial",segmento:"B2B",descripcion:"El portal PSE permite a las empresas agregar y visualizar todas sus cuentas bancarias corporativas en un único lugar. Sobre esta visión se construyen conciliación automática, gestión de tesorería y toma de decisiones financieras en tiempo real.",objetivo:"Construir el Hub Empresarial / Fundación B2B",avance:8,trabajos:["El tesorero accede a múltiples portales bancarios para consolidar caja — proceso manual y lento","Sin visión consolidada no hay decisiones de tesorería en tiempo real","La conciliación multi-banco es uno de los procesos más costosos en tiempo en empresas medianas","PSE no tiene visibilidad del estado financiero de sus clientes empresariales"],casos:["Dashboard de tesorería: posición de caja consolidada en tiempo real","Conciliación automática de transacciones multi-banco","Alertas de saldos mínimos, vencimientos y compromisos próximos","Integración con ERP (SAP, Oracle, Siigo, World Office)"],mercado:["30.451 empresas vinculadas a PSE — base instalada de clientes empresariales (ACH Colombia, 2025)","Mercado global de soluciones de tesorería corporativa proyectado en USD 5.3B para 2027 (Grand View Research, 2024)"],amenaza:5,ingreso:"Medio",validacion:"Parcial",competencia:["Portales bancarios propios (Bancolombia Empresas, BBVA)","SAP Cash Management","Fintechs de tesorería (Belvo, Prometeo)"]},
+  14:{nombre:"Crédito productivo / BNPL empresarial",segmento:"B2B",descripcion:"PSE facilita acceso a crédito productivo para empresas en casos específicos de alto valor: pago de impuestos, nómina, seguridad social, liquidaciones y eventos no planeados de flujo de caja. ACH actúa como intermediador entre la empresa y aliados financieros.",objetivo:"Crear Nuevo Valor / Ecosistema Financiero Empresarial",avance:5,trabajos:["La empresa no tiene liquidez en la fecha de vencimiento del impuesto o la nómina","Los créditos bancarios requieren semanas de trámite — incompatibles con urgencias de caja","PSE es canal de pago de estos compromisos pero no facilita el financiamiento","Sin crédito integrado, la empresa busca soluciones fuera del ecosistema PSE"],casos:["Crédito puente para pago de impuestos (DIAN, IVA, ICA, predial)","Financiamiento de nómina: empresa paga con crédito, amortiza en semanas","Crédito para aportes PILA cuando el flujo de caja no alcanza","Liquidación de contratos: anticipo para cubrir obligaciones laborales imprevistas"],mercado:["Solo el 14.8% de las microempresas tiene crédito vigente vs. 81.9% de grandes empresas (Banca de Oportunidades, 2024)","$5.8B financiados vía crédito alternativo en 2024, +51% en empresas usuarias (Colombia Fintech, 2025)"],amenaza:5,ingreso:"Alto",validacion:"Parcial",competencia:["Bancos con líneas de crédito rotativo empresarial","Fintechs: Sempli, Moni, Afluenta","Tarjetas de crédito corporativas"]},
+  15:{nombre:"Factoring ACH",segmento:"B2B",descripcion:"Gestión y negociación de facturación anticipada a través del portal PSE. La empresa carga sus facturas electrónicas integradas con RADIAN/DIAN, las negocia con entidades aliadas y recibe el anticipo en las cuentas del portal. ACH es el operador natural del factoring digital por su posición en el ecosistema.",objetivo:"Nuevo Mercado / Monetizar Infraestructura ACH",avance:3,trabajos:["La pyme vende a crédito pero necesita liquidez inmediata para seguir operando","El factoring tradicional toma 15 días o más — digitalización lo reduce a 3-5 días (DIAN/E-Bill, 2024)","El banco excluye al 85% del tejido empresarial con requisitos estrictos (Kapital Colombia, 2026)","ACH tiene la infraestructura de compensación para ser el operador natural del factoring digital"],casos:["Carga y visualización de facturas electrónicas desde RADIAN/DIAN","Negociación y subasta de facturas con múltiples cesionarios","Anticipo automático al aprobar la cesión con acreditación en el portal","Confirming: empresa pagadora ofrece a proveedores adelantar el cobro"],mercado:["Entre 2023 y agosto 2024: 3.4M facturas en RADIAN, 3.2M endosadas, COP $71.1B (DIAN, 2024)","2024 cerró con $5.8B en colocaciones factoring, +51% en solicitantes (Colombia Fintech, 2025). Colombia es 4° en LATAM en volumen factoring (FCI/Portafolio, 2025)"],amenaza:4,ingreso:"Alto",validacion:"Sí",competencia:["Bancos con factoring tradicional (Bancolombia, BBVA)","Fintechs: Plataform, Mifactoring, Kapital, Klym","Confecámaras: confirming en cadenas de suministro"]},
+  16:{nombre:"Gestión de facturas empresarial",segmento:"B2B",descripcion:"El portal centraliza las obligaciones periódicas de la empresa: servicios públicos, telecomunicaciones, arrendamientos. La empresa inscribe facturas, programa pagos automáticos, gestiona aprobaciones jerárquicas y mantiene visibilidad del flujo de caja comprometido.",objetivo:"Presencia Cotidiana Empresarial / Defender Recaudo",avance:15,trabajos:["La empresa gestiona pagos recurrentes desde múltiples plataformas desconectadas","No hay control de aprobación antes del pago — riesgo de fraude interno","Los pagos manuales generan retrasos, moras y afectación de relaciones con proveedores","Sin visibilidad de vencimientos, el flujo de caja proyectado no es confiable"],casos:["Inscripción de facturas con asignación de centro de costo","Flujo de aprobación jerárquico: solicitud → aprobador → pago","Débito automático (domiciliación) programado por la empresa","Historial con trazabilidad completa para auditoría interna y externa"],mercado:["30.451 empresas vinculadas a PSE — mercado natural inmediato (ACH Colombia, 2025)","Mercado AP automation en LATAM proyectado en USD 1.2B para 2026 (Mordor Intelligence, 2024)"],amenaza:6,ingreso:"Medio",validacion:"Sí",competencia:["Portales bancarios empresariales","SAP Ariba, Coupa","Fintechs de gestión de pagos empresariales"]},
+  17:{nombre:"Pago de proveedores / Dispersión",segmento:"B2B",descripcion:"Servicio de dispersión masiva de pagos a prestadores de servicios, proveedores o comisionistas. La empresa carga un archivo de dispersión y PSE ejecuta los créditos a cada destinatario en su entidad financiera, con soporte para los 49 bancos del ecosistema ACH y notificación en tiempo real.",objetivo:"Escalar Dispersión / Core B2B",avance:10,trabajos:["Pagar a decenas o cientos de proveedores manualmente es costoso y propenso a errores","Los portales bancarios limitan el número de beneficiarios por sesión","No hay trazabilidad unificada del estado de cada pago ni notificación al receptor","La conciliación post-dispersión es manual y consume horas del área contable"],casos:["Dispersión masiva (hasta miles de registros por lote) a cualquiera de los 49 bancos del ecosistema","Carga de archivo plano, Excel o integración API con ERP","Notificación automática al proveedor: correo, SMS o notificación en portal","Reporte de dispersión: exitosos, fallidos, pendientes de retorno"],mercado:["ACH mueve ~COP $180B mensuales en transferencias interbancarias, gran parte en pagos a proveedores (La República, 2025)","+5.000 empresas medianas y grandes con necesidad de dispersión masiva en Colombia (DANE/Confecámaras, 2024)"],amenaza:5,ingreso:"Medio-Alto",validacion:"Sí",competencia:["Portales bancarios empresariales (Bancolombia, Davivienda)","Kushki, PayValida","ERPs con módulo de pagos (SAP, Oracle)"]},
+  18:{nombre:"Recaudo cash-in con red de aliados",segmento:"B2B",descripcion:"Habilitación de recaudo en efectivo a través de una red de aliados físicos para empresas de consumo masivo cuyos canales operan en efectivo. PSE recibe el pago en efectivo desde el punto físico y lo acredita en tiempo real a la empresa, eliminando el riesgo del efectivo en la cadena.",objetivo:"Nuevo Segmento / Inclusión del Canal Tradicional",avance:3,trabajos:["El tendero paga al surtidor en efectivo — riesgo de pérdida, robo y descontrol de cartera","La empresa de consumo masivo no tiene visibilidad del cobro hasta que el efectivo llega a tesorería","No hay digitalización del recaudo en el canal tradicional sin bancarización completa del tendero","Costos de seguridad y logística del efectivo en tránsito son elevados"],casos:["Tendero paga su pedido al distribuidor; sistema lo acredita en tiempo real a la empresa","Recaudo vía QR: surtidor presenta código; tendero paga desde cualquier fuente disponible","Dashboard de cartera en tiempo real: pagos recibidos, saldos, morosidad por ruta/distribuidor","Habilitación del tendero para pagar a surtidores sin depender del efectivo (H2)"],mercado:["Canal tradicional representa el 55% de ventas del sector consumo masivo en Colombia (Nielsen, 2024)","+450.000 tiendas de barrio en Colombia operando principalmente en efectivo — mercado no digitalizado"],amenaza:3,ingreso:"Alto",validacion:"Parcial",competencia:["Efectivo (dominante, sin competidor digital establecido)","Nequi Negocios, Daviplata (recaudo básico)","Plataformas de distribución con digitalización parcial"]},
+  19:{nombre:"Recaudo vía cobranza (RtP)",segmento:"B2B",descripcion:"La empresa genera solicitudes de pago (RtP) que llegan al portal del usuario sin que este deba ir a la plataforma del comercio. ACH actúa como recaudador integrado, mostrando el seguimiento del proceso y consolidando el resultado de la cobranza para la empresa.",objetivo:"Nuevo Servicio / Iniciación de Pagos RtP",avance:8,trabajos:["La empresa envía facturas pero el usuario debe ir a su plataforma para pagar — alta fricción y abandono","El proceso de cobranza requiere call centers y visitas — costo operativo elevado","No hay visibilidad en tiempo real del estado de cada cobro por parte del recaudador","La empresa no puede saber si el cliente recibió y vio la solicitud de pago"],casos:["Generación masiva de solicitudes de pago (RtP) desde el portal empresarial","El usuario aprueba el pago con un clic desde su portal PSE (sin ir al comercio)","Dashboard de cobranza: enviadas, vistas, aprobadas, rechazadas, pendientes","Escalamiento automático: recordatorio o cobranza tradicional si no paga en X días"],mercado:["+50M facturas mensuales de servicios públicos y telecomunicaciones en Colombia (SSPD/DANE, 2023)","RtP es uno de los pilares de la agenda de Bre-B — si PSE no lo implementa primero, pierde este segmento"],amenaza:9,ingreso:"Alto",validacion:"Sí",competencia:["Portales de pago propios de cada empresa (solución fragmentada)","Cobis, Equifax Collections (cobranza tradicional)","Bre-B con RtP nativo — amenaza directa e inmediata"]},
+  20:{nombre:"PILA empresarial",segmento:"B2B",descripcion:"Acceso directo a la liquidación y pago de planilla de seguridad social desde el portal PSE. La empresa genera o importa la liquidación PILA, la revisa desde el portal y ejecuta el pago con los instrumentos corporativos disponibles. ACH tiene ventaja regulatoria histórica en este proceso.",objetivo:"Defender Ventaja Regulatoria / Modernizar Core Empresarial",avance:30,trabajos:["El proceso PILA requiere múltiples pasos fuera del ecosistema de pago","Pymes sin software de nómina hacen la liquidación manualmente — alta probabilidad de error","No hay integración directa entre nómina, liquidación PILA y pago desde un único lugar","Las sanciones por errores o retrasos en el aporte son costosas para las pymes"],casos:["Importación de archivo de liquidación desde el sistema de nómina de la empresa","Cálculo asistido de aportes para empresas sin software especializado","Pago con débito automático en la fecha de vencimiento","Alertas de vencimiento y cambios normativos (porcentajes de aportes, novedades UGPP)"],mercado:["Todas las empresas con empleados formales tienen obligación mensual PILA — universo +1M empresas registradas (Confecámaras, 2024)","PSE procesa la mayoría del recaudo PILA — posición dominante a defender"],amenaza:6,ingreso:"Medio",validacion:"Sí",competencia:["Aportes en Línea (mayor cuota PILA digital)","Software de nómina con PILA integrado (Siigo, Helisa)","Portales bancarios con módulo PILA"]},
+  21:{nombre:"Dispersión de nómina",segmento:"B2B",descripcion:"Servicio de pago de nómina multi-entidad desde el portal PSE. La empresa carga el archivo de nómina y PSE ejecuta los créditos a cada empleado en su entidad financiera de preferencia, con soporte para los 49 bancos, SEDPES y billeteras del ecosistema ACH.",objetivo:"Escalar Dispersión / Core B2B",avance:20,trabajos:["Empresa con empleados en múltiples bancos debe hacer N transacciones desde N portales bancarios","Los portales bancarios limitan beneficiarios por sesión o cobran tarifas por banco destino","El empleado no recibe notificación de pago — genera consultas al área de nómina","La conciliación post-pago de nómina es manual y consume tiempo del área contable"],casos:["Carga de archivo de nómina (Excel, plano o API con ERP) y pago simultáneo multi-entidad","Comprobante digital al empleado por correo, SMS o notificación en portal","Soporte para nómina variable: comisiones, bonificaciones, horas extra","Integración con sistemas de nómina (Siigo, Helisa, SAP HR)"],mercado:["ACH mueve ~COP $180B mensuales en transferencias interbancarias, incluyendo dispersión de nómina (La República, 2025)","+10M trabajadores formales en el sector privado colombiano (DANE, 2024) — todos reciben nómina en alguna entidad del ecosistema"],amenaza:4,ingreso:"Medio",validacion:"Sí",competencia:["Portales bancarios con módulo de nómina","Siigo Nómina, Nominaplus","Deel, Runa (nóminas internacionales o equipos remotos)"]},
+  22:{nombre:"Escrow digital B2B",segmento:"B2B",descripcion:"ACH/PSE retiene fondos entre empresas hasta que se cumplen condiciones de negocio definidas contractualmente. Aplica en transacciones B2B de mayor escala y complejidad: montos más altos, reglas elaboradas y posible intervención de tercero verificador.",objetivo:"Crear Nuevo Valor / Diferenciación B2B",avance:3,trabajos:["El proveedor no despacha sin garantía de pago; el comprador no paga sin garantía de entrega","Las cartas de crédito bancarias son costosas, lentas y poco digitales para transacciones medianas","Las plataformas B2B no tienen mecanismo nativo de garantía de pago integrado","Transacciones de importación/exportación tienen riesgo de contrapartida elevado"],casos:["Compraventa B2B: pago liberado al confirmar entrega o cumplimiento de hito contractual","Contratos de construcción o ingeniería: pagos por avance de obra verificado","Importaciones: pago al proveedor internacional liberado al confirmar llegada en aduana","Plataformas B2B de subastas: escrow automático por lote adjudicado"],mercado:["El comercio B2B en Colombia mueve billones de pesos mensuales. La ausencia de escrow digital interoperable es una brecha estructural del ecosistema de pagos","Mercado global escrow B2B proyectado en USD 4.7B para 2027 (Allied Market Research)"],amenaza:3,ingreso:"Medio-Alto",validacion:"Parcial",competencia:["Cartas de crédito bancarias (dominante pero costoso y lento)","Fiduciarias (escrow por patrimonio autónomo, solo para montos grandes)","No existe escrow digital B2B asequible e interoperable en Colombia"]},
+  23:{nombre:"Marketing de pagos B2B",segmento:"B2B",descripcion:"La empresa usa el portal PSE para ejecutar compras corporativas (insumos, regalos, eventos de fin de año, dotación) con beneficios negociados con proveedores aliados, o para ofrecer descuentos y beneficios a sus propios clientes a través del ecosistema PSE.",objetivo:"Monetizar Ecosistema / Nuevo Modelo de Relacionamiento",avance:3,trabajos:["Las compras corporativas se gestionan sin visibilidad ni optimización centralizada","Las empresas no tienen acceso a ofertas negociadas para compras en volumen desde un portal","Los programas de beneficios para empleados están fragmentados en múltiples plataformas","No hay un canal B2B donde la empresa active campañas hacia compradores corporativos segmentados"],casos:["Marketplace B2B: catálogo de proveedores para compras corporativas por categoría","Programa de beneficios para empleados: descuentos negociados accesibles desde el portal","Campañas de activación comercial: empresa X ofrece descuento a compradores del sector Y","Analítica de compras corporativas: gasto por proveedor, categoría, período"],mercado:["Mercado de beneficios y bienestar corporativo en Colombia mueve +COP $2B anuales (estimación sectorial, 2024)","30.451 empresas vinculadas a PSE — base instalada de potenciales usuarios del marketplace B2B (ACH Colombia, 2025)"],amenaza:4,ingreso:"Medio",validacion:"Parcial",competencia:["Pluxee (ex Sodexo), Edenred (beneficios corporativos establecidos)","Rappi for Business","Mercado Libre Business"]},
+  25:{nombre:"PSE como servicio (PaaS / IaaS transaccional)",segmento:"B2C",descripcion:"ACH presta PSE como plataforma o infraestructura como servicio (PaaS/IaaS) para que otros actores del ecosistema —bancos, cooperativas, fintechs, pasarelas y operadores internacionales— usen PSE como su sistema de pagos sin construir desde cero. Cada implementador reutiliza débito, crédito, reversión, APIs, antifraude y DataLake, adaptando marca, reglas de negocio y configuración sin tocar el core.",objetivo:"Nuevo Modelo de Negocio / Escala Exponencial",avance:5,trabajos:["Actores del ecosistema deben construir su transaccionalidad desde cero — alto costo y tiempo","Ciclos de salida al mercado de nuevos operadores toman 18+ meses sin infraestructura compartida","ACH construyó capacidades transaccionales únicas pero no las monetiza como servicio a terceros","Existe demanda latente de bancos regionales, cooperativas y startups por infraestructura confiable de pagos"],casos:["Banco regional: consume PSE como servicio para agregación y pagos multi-instrumento sin desarrollar core propio","Cooperativa: activa dispersión, factoring y BNPL con marca propia sobre infraestructura de ACH","Fintech: usa APIs, motor antifraude y capacidades transaccionales para lanzar producto en meses","Operador internacional: integra el core de pagos para habilitar transaccionalidad local sin reconstruir plataforma"],mercado:["+100 instituciones financieras en Colombia podrían ser clientes de servicios transaccionales tipo PaaS/IaaS","Mercado global de plataformas de pago white label proyectado en USD 8.5B para 2027 (Allied Market Research, 2024)"],amenaza:4,ingreso:"Alto",validacion:"Parcial",competencia:["Stripe Connect, Adyen for Platforms (mercado global)","Kushki, PayU (parcialmente en LATAM)","No existe oferta consolidada de PSE como servicio en Colombia — oportunidad de first-mover"]}
+};
+
+const olas = [
+  {id:0,nombre:"Encender el Portal",sub:"Proteger la Operación",desc:"Estandariza la base operativa del Portal PSE, mejora el flujo actual y consolida capacidades iniciales de recaudo y experiencia para sostener el negocio mientras se habilita la transformación.",periodo:"Q3–Q4 2026",dur:"6 meses",color:"#37474F",stretch:false,
+   hab:["Auditoría y depuración de datos de los 20M usuarios registrados","Portal PSE: estructura base, sistema de diseño y autenticación propia (no la del banco)","Habilitación legal como PSP — inicio del proceso ante la SFC","Enrolamiento de usuarios en el portal","Optimización del flujo actual: de 7+ campos a 3 campos; reintentos automáticos; mejora de mensajes de error","Primer módulo de integración unificada (API inicial)","Primeras alianzas con fintechs y billeteras con APIs expuestas (piloto)"],
+  cus:[{f:1,a:"Mejora del flujo actual: menos campos, entidades favoritas, reintentos automáticos, pago con tarjeta y pago con crédito (BNPL)"},{f:6,a:"Historial de facturas pagadas + pago manual mejorado desde portal"},{f:7,a:"Historial transaccional básico en portal (solo datos PSE)"},{f:20,a:"Modernización UX + notificaciones de vencimiento para empresas"},{f:21,a:"Migración al portal con panel básico de seguimiento de dispersiones"}]},
+  {id:1,nombre:"Desacoplar y Unificar",sub:"Construir la Plataforma Core",desc:"Integra débitos, créditos, reversos, identidad y datos en una arquitectura única para eliminar silos y habilitar que los casos de uso escalen con una sola capa transaccional.",periodo:"Q1–Q2 2027",dur:"6 meses",color:"#1A56A0",stretch:false,
+  hab:["Débito único: un mecanismo para extraer dinero desde cualquier instrumento (reemplaza los 4-6 canales actuales)","Crédito único: un mecanismo para acreditar dinero en cualquier destino","Reversión estándar: ciclo completo de la transacción cerrado","Identidad unificada + autenticación biométrica alineada a Open Banking (PSD2 o similares)","Control de fraude centralizado: fuera de los silos por producto","API única para bancos y comercios (un solo punto de integración)","DataLake unificado: toda la información transaccional en un repositorio único; eliminación de silos de reportería"],
+  cus:[{f:1,a:"Múltiples instrumentos desde portal: cuenta, tarjeta, llave, billetera, BNPL"},{f:2,a:"Retiro de efectivo en red de aliados via QR o código generado desde el portal"},{f:6,a:"Domiciliación automática nativa + RtP básico (comercio inicia cobro)"},{f:"XX",a:"Seguridad basada en la alimentación continua del nuevo motor de detección de fraudes"},{f:16,a:"Flujo de aprobación jerárquico + pagos programados para empresas"},{f:17,a:"Dispersión masiva multi-entidad desde portal (API + archivo)"},{f:19,a:"RtP: empresa genera solicitud → usuario aprueba desde portal PSE"},{f:20,a:"Integración directa con operadores PILA desde portal empresarial"}]},
+  {id:2,nombre:"Expandir el Hub",sub:"Agregación y Nuevos Servicios",desc:"Convierte el portal en hub financiero con agregacion multi-entidad y nuevos productos de alto valor como BNPL, tarjeta prepago, tesoreria empresarial y planilla personal iniciando su despliegue.",periodo:"Q3 2027",dur:"3 meses",color:"#00695C",stretch:false,
+   hab:["Integración con primeras fintechs y billeteras con APIs (Nequi, Daviplata + 3-5 fintechs más)","Módulo de agregación de cuentas: conector paramétrico multi-entidad","Onboarding automatizado con IA para usuarios y comercios (reducción de días a horas)","KYC continuo: monitoreo de clientes durante el ciclo de vida (no solo al inicio)","Módulo BNPL: integración con al menos 2 originadores de crédito","Tarjeta prepago virtual: acuerdo firmado con banco sponsor","Módulo de factoring: conexión técnica con RADIAN/DIAN para lectura de facturas electrónicas"],
+  cus:[{f:3,a:"Tarjeta virtual PSE — carga desde cualquier cuenta del portal"},{f:4,a:"Cuentas locales + billeteras; consulta de saldo; cross-selling básico (H1)"},{f:5,a:"BNPL como instrumento nativo en el checkout del portal"},{f:7,a:"Categorización de gastos + proyección básica de flujo de caja personal"},{f:8,a:"Inicio del caso PILA personal: mejora UX del flujo, BNPL para independientes y pago multi-instrumento"},{f:24,a:"Configuración de Zona Segura PSE con reglas por localización, entidades, comercios de confianza, horarios y límites transaccionales"},{f:12,a:"Tarjeta virtual corporativa para viáticos y gastos de representación"},{f:13,a:"Dashboard de tesorería consolidado multi-banco para empresas"},{f:14,a:"BNPL para impuestos y nómina — primeros casos piloto con empresas"},{f:15,a:"MVP: carga de facturas desde RADIAN + negociación con primer cesionario"},{f:18,a:"Piloto de recaudo cash-in con red de aliados en 2-3 ciudades"},{f:25,a:"White Label: API y capacidades de PSE (débito, crédito, agregación, antifraude) disponibles para bancos, cooperativas y fintechs con marca propia"}]},
+  {id:3,nombre:"Nuevos Mercados",sub:"Escala, Inteligencia y Crossborder",desc:"Extiende el alcance del ecosistema hacia remesas, cashout, escrow y marketing de pagos, sumando capacidades de IA y operaciones crossborder para abrir nuevas fuentes de ingreso.",periodo:"Q4 2027",dur:"3 meses",color:"#5B21B6",stretch:false,
+   hab:["Capa multi-moneda completada: soporte para transacciones en pesos y divisas","Integración con operadores de remesas internacionales (Wise, Remitly u otros) vía API","Módulo de escrow digital: motor de reglas de negocio, custodia de fondos, liberación automática","Marco legal del escrow: habilitación regulatoria con SFC para custodia temporal de fondos","Plataforma de marketing de pagos: infraestructura de segmentación y activación de beneficios","Gestor financiero con IA: modelos entrenados sobre datos del portal PSE"],
+  cus:[{f:3,a:"Emisión de tarjeta física con banco sponsor; soporte multimoneda para pagos en exterior"},{f:7,a:"Recomendaciones de IA + ejecución de instrucciones básicas (pagar facturas, alertas proactivas)"},{f:9,a:"Recepción crossborder de remesas + disposición inmediata desde portal"},{f:10,a:"Escrow C2C: eCommerce y plataformas de transporte; liberación automática por condición"},{f:11,a:"Cashback, descuentos y puntos de fidelización desde el portal para usuarios"},{f:18,a:"Expansión nacional de la red de aliados de recaudo cash-in"},{f:22,a:"Escrow B2B: contratos entre empresas, pagos por hito, garantías de entrega"},{f:23,a:"Marketplace de compras corporativas: insumos, regalos, eventos de fin de año"}]},
+  {id:4,nombre:"Disrupción y Escala",sub:"Físico · Agéntico · White Label",desc:"Escala el modelo a canales fisicos y de terceros, habilita operacion agentica y prepara capacidades white label para comercializar la infraestructura de PSE como plataforma.",periodo:"Q1 2028",dur:"3 meses",color:"#B45309",stretch:true,
+   hab:["Integración con red de POS y cajeros: PSE como instrumento en el punto de venta físico","Pagos desde redes sociales: WhatsApp, TikTok, Instagram como orígenes de transacción","PSE agéntico completo: ejecución por instrucción en lenguaje natural + MCP para agentes externos","White Label: modularización de capacidades para venta a terceros (bancos, cooperativas, fintechs)","Agregación de cuentas internacionales (H2): bancos del exterior; inicio exploración cripto (H3)"],
+  cus:[{f:1,a:"PSE como instrumento en POS físico y como opción en redes sociales y apps de terceros"},{f:4,a:"Cuentas en bancos del exterior y fondos de inversión visibles en el portal (H2)"},{f:7,a:"PSE agéntico completo: compras, pagos y transferencias por instrucción en lenguaje natural"},{f:5,a:"Hagamos vaca / split payments: pago colectivo desde múltiples usuarios para un mismo fin"},{f:7,a:"Rentabilización automática de excedentes de tesorería desde el gestor financiero"},{f:17,a:"White Label de capacidades de dispersión para bancos aliados y cooperativas"},{f:25,a:"PSE como plataforma/infraestructura como servicio para terceros que requieren transaccionalidad sin construir desde cero"}]}
+];
+
+/* ===== RENDER OLAS ===== */
+const row = document.getElementById('olas-row');
+olas.forEach(ola => {
+  const col = document.createElement('div');
+  col.className = 'ola-col';
+  const headStyle = `background: linear-gradient(135deg, ${ola.color}cc, ${ola.color}88);`;
+  const cuCards = ola.cus.filter(cu => fichas[cu.f].segmento === 'B2C').map(cu => {
+    const f = fichas[cu.f];
+    const seg = f.segmento;
+    const fichaIdJs = typeof cu.f === 'string' ? `'${cu.f.replace(/'/g,"\\'")}'` : cu.f;
+    return `<div class="cu-card" data-ficha="${cu.f}" data-alcance="${cu.a.replace(/"/g,'&quot;')}" onclick="openPanel(${fichaIdJs},this,\`${cu.a.replace(/`/g,'\\`')}\`)">
+      <div class="cu-row">
+        <div class="cu-name">${f.nombre}</div>
+        <div class="cu-tags">
+          <span class="tag ${seg==='B2C'?'tag-b2c':'tag-b2b'}">${seg}</span>
+          <span class="tag tag-num">${cu.f.toString().padStart(2,'0')}</span>
+        </div>
+      </div>
+      <div class="cu-alcance">${cu.a}</div>
+    </div>`;
+  }).join('');
+
+  col.innerHTML = `
+    <div class="ola-head" style="${headStyle}">
+      <div class="ola-eyebrow">Ola ${ola.id}</div>
+      <div class="ola-name">${ola.nombre}</div>
+      <div class="ola-sub">${ola.sub}</div>
+      <div class="ola-desc">${ola.desc}</div>
+      <div>
+        <span class="ola-periodo">📅 ${ola.periodo} · ${ola.dur}</span>
+        ${ola.stretch?'<span class="ola-stretch">STRETCH</span>':''}
+      </div>
+    </div>
+    <div class="ola-body">
+      <div class="section-label">Habilitación</div>
+      <ul class="hab-list">${ola.hab.map(h=>`<li class="hab-item">${h}</li>`).join('')}</ul>
+      <div class="section-label">Casos de Uso</div>
+      <div class="cu-stack">${cuCards}</div>
+    </div>`;
+  row.appendChild(col);
+});
+
+/* ===== PANEL ===== */
+let activeCard = null;
+function amClass(v){return v>=8?'am-high':v>=5?'am-mid':'am-low';}
+function amColor(v){return v>=8?'#ef4444':v>=5?'#eab308':'#22c55e';}
+
+function openPanel(id, card, alcance) {
+  if(activeCard){ activeCard.classList.remove('is-active'); }
+  card.classList.add('is-active');
+  activeCard = card;
+
+  const f = fichas[id];
+  const seg = f.segmento;
+
+  document.getElementById('p-num').textContent = `Ficha ${String(id).padStart(2,'0')} · ${seg}`;
+  document.getElementById('p-title').textContent = f.nombre;
+  document.getElementById('p-badges').innerHTML = `
+    <span class="badge badge-obj">${f.objetivo}</span>
+    <span class="badge badge-av">Avance ${f.avance}%</span>
+    <span class="badge badge-val">Validado: ${f.validacion}</span>
+    <span class="badge badge-ing">Ingreso: ${f.ingreso}</span>
+    <span class="badge badge-am ${amClass(f.amenaza)}">Amenaza ${f.amenaza}/10</span>
+    <span class="tag ${seg==='B2C'?'tag-b2c':'tag-b2b'}" style="font-size:11px;padding:4px 9px;">${seg}</span>`;
+
+  document.getElementById('p-body').innerHTML = `
+    <div class="p-section">
+      <div class="p-alcance-box">
+        <div class="p-alcance-lbl">Alcance en esta ola</div>
+        <div class="p-alcance-txt">${alcance}</div>
+      </div>
+    </div>
+    <div class="p-section">
+      <div class="p-stitle">Descripción</div>
+      <div class="p-desc">${f.descripcion}</div>
+    </div>
+    <div class="p-section">
+      <div class="p-stitle">Trabajos que resuelve</div>
+      <ul class="p-list">${f.trabajos.map(t=>`<li>${t}</li>`).join('')}</ul>
+    </div>
+    <div class="p-section">
+      <div class="p-stitle">Casos de Uso</div>
+      <ul class="p-list">${f.casos.map(c=>`<li>${c}</li>`).join('')}</ul>
+    </div>
+    <div class="p-section">
+      <div class="p-stitle">Potencial de Mercado</div>
+      ${f.mercado.map(m=>`<div class="p-mkt-item">${m}</div>`).join('')}
+    </div>
+    <div class="p-section">
+      <div class="p-stitle">Indicadores</div>
+      <div class="p-grid">
+        <div class="p-stat">
+          <div class="p-stat-lbl">Amenaza competitiva</div>
+          <div class="p-stat-val">${f.amenaza}/10</div>
+          <div class="p-threat"><div class="p-threat-fill" style="width:${f.amenaza*10}%;background:${amColor(f.amenaza)}"></div></div>
+        </div>
+        <div class="p-stat">
+          <div class="p-stat-lbl">Ingreso potencial</div>
+          <div class="p-stat-val ${f.ingreso.startsWith('Alto')?'g':'y'}">${f.ingreso}</div>
+        </div>
+        <div class="p-stat">
+          <div class="p-stat-lbl">% Avance actual</div>
+          <div class="p-stat-val">${f.avance}%</div>
+          <div class="p-threat"><div class="p-threat-fill" style="width:${f.avance}%;background:#3b82f6"></div></div>
+        </div>
+        <div class="p-stat">
+          <div class="p-stat-lbl">Validado con mercado</div>
+          <div class="p-stat-val ${f.validacion==='Sí'?'g':'y'}">${f.validacion}</div>
+        </div>
+      </div>
+    </div>
+    <div class="p-section">
+      <div class="p-stitle">Competencia relevante</div>
+      <div class="p-comp-chips">${f.competencia.map(c=>`<span class="p-comp-chip">${c}</span>`).join('')}</div>
+    </div>`;
+
+  document.getElementById('overlay').classList.add('on');
+  document.getElementById('panel').classList.add('on');
+}
+
+function closePanel() {
+  document.getElementById('overlay').classList.remove('on');
+  document.getElementById('panel').classList.remove('on');
+  if(activeCard){ activeCard.classList.remove('is-active'); activeCard=null; }
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closePanel(); });
+</script>
+</body>
+</html>

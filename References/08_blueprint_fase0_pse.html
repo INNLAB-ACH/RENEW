@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Blueprint · Fase 0 — Pago PSE / ACH Colombia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Fraunces:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --c-blue:#5454e9;
+  --c-blue-dark:#3a3acc;
+  --c-blue-deep:#1f1fa3;
+  --c-blue-tint:#eef0ff;
+  --c-yellow:#e4eb60;
+  --c-orange:#e9683b;
+  --c-orange-tint:#fde8de;
+  --c-purple:#865cf0;
+  --c-purple-tint:#efe6ff;
+  --c-green:#4cb979;
+  --c-green-tint:#def0e4;
+  --c-red:#e91e63;
+  --c-red-tint:#ffe0e8;
+  --c-cyan:#06b6d4;
+  --c-cyan-tint:#cefcff;
+  --c-amber:#f59e0b;
+  --c-ink:#0a0a14;
+  --c-ink-soft:#1a1a2e;
+  --c-gray0:#fafafa;
+  --c-gray05:#f3f3f5;
+  --c-gray1:#88898c;
+  --c-gray2:#cecfd4;
+  --c-gray3:#e6e7eb;
+  --c-paper:#ffffff;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+  color:var(--c-ink);
+  background:var(--c-paper);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+em{font-style:italic}
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+.serif{font-family:'Fraunces',Georgia,serif}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* ---------- TOPNAV ---------- */
+.topnav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 40px;
+  background:rgba(255,255,255,0.82);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--c-gray3);
+}
+.topnav__brand{display:flex;align-items:center;gap:14px}
+.brand-logo{font-weight:800;font-size:15px;letter-spacing:-0.01em}
+.brand-logo .mono{font-weight:700}
+.brand-divider{width:1px;height:20px;background:var(--c-gray2)}
+.brand-icesi{font-family:'Fraunces',serif;font-weight:700;font-size:17px;color:var(--c-blue-deep)}
+.topnav__title{font-size:12px;color:var(--c-gray1);font-weight:600;letter-spacing:0.01em}
+.topnav__links{display:flex;gap:24px}
+.topnav__links a{
+  color:var(--c-ink);text-decoration:none;font-size:13px;font-weight:600;
+  opacity:0.72;transition:opacity .2s;
+}
+.topnav__links a:hover{opacity:1}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;min-height:88vh;
+  display:flex;flex-direction:column;justify-content:center;
+  background:var(--c-ink);color:#fff;overflow:hidden;
+  padding:140px 0 90px;
+}
+.hero__bg{position:absolute;inset:0;z-index:0}
+.hero__bg::before,.hero__bg::after{
+  content:"";position:absolute;border-radius:50%;filter:blur(90px);opacity:0.55;
+  animation:float 16s ease-in-out infinite;
+}
+.hero__bg::before{
+  width:620px;height:620px;top:-180px;right:-120px;
+  background:radial-gradient(circle,var(--c-blue) 0%,transparent 70%);
+}
+.hero__bg::after{
+  width:520px;height:520px;bottom:-160px;left:-100px;
+  background:radial-gradient(circle,var(--c-yellow) 0%,transparent 70%);
+  animation-delay:-8s;
+}
+@keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-30px)}}
+.hero .wrap{position:relative;z-index:1}
+.hero__eyebrow{
+  font-size:12px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--c-yellow);font-weight:700;margin-bottom:28px;
+}
+.hero__title{
+  font-family:'Fraunces',serif;font-weight:600;
+  font-size:clamp(38px,7vw,86px);line-height:1.02;letter-spacing:-0.02em;
+  margin-bottom:30px;
+}
+.hero__title em{
+  font-style:italic;font-weight:700;
+  background:linear-gradient(110deg,var(--c-blue) 0%,#8a8aff 45%,var(--c-yellow) 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero__sub{
+  font-size:clamp(16px,2vw,21px);max-width:680px;color:rgba(255,255,255,0.78);
+  font-weight:400;margin-bottom:42px;
+}
+.hero__meta{display:flex;flex-wrap:wrap;gap:14px}
+.hero__chip{
+  padding:9px 18px;border-radius:100px;font-size:13px;font-weight:600;
+  border:1px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.05);
+  color:rgba(255,255,255,0.9);
+}
+.hero__brand{display:flex;align-items:center;gap:16px;margin-bottom:34px}
+.hero__brand .brand-logo{color:#fff}
+.hero__brand .brand-icesi{color:#fff}
+.hero__brand .brand-divider{background:rgba(255,255,255,0.3)}
+
+/* ---------- SECTIONS ---------- */
+section.block{padding:90px 0}
+.eyebrow{
+  font-size:12px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--c-blue);font-weight:800;margin-bottom:18px;
+}
+.section-title{
+  font-family:'Fraunces',serif;font-weight:600;
+  font-size:clamp(28px,4vw,46px);line-height:1.08;letter-spacing:-0.02em;
+  margin-bottom:24px;
+}
+.section-title em{font-style:italic;color:var(--c-blue)}
+.lead{font-size:18px;color:#2a2a38;max-width:760px;margin-bottom:14px}
+.lead strong{font-weight:700;color:var(--c-ink)}
+
+/* ---------- CONTEXT CARDS ---------- */
+.ctx-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:40px}
+.ctx-card{
+  border:1px solid var(--c-gray3);border-radius:18px;padding:28px 30px;
+  background:var(--c-gray0);
+}
+.ctx-card h4{font-size:13px;text-transform:uppercase;letter-spacing:0.08em;color:var(--c-gray1);margin-bottom:12px;font-weight:700}
+.ctx-card p{font-size:15px;color:#33333f}
+.ctx-card p strong{color:var(--c-ink)}
+.ctx-actors{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.actor-pill{
+  font-size:12.5px;font-weight:600;padding:6px 13px;border-radius:100px;
+  background:var(--c-blue-tint);color:var(--c-blue-deep);
+}
+
+/* ---------- PERSONA ---------- */
+.persona{background:var(--c-gray05);border-radius:28px;padding:54px 56px;margin-top:46px;
+  display:grid;grid-template-columns:170px 1fr;gap:48px;align-items:start}
+.persona__avatar{
+  width:140px;height:140px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces',serif;font-weight:700;font-size:54px;color:#fff;
+  background:linear-gradient(135deg,var(--c-blue) 0%,var(--c-purple) 100%);
+  box-shadow:0 18px 40px -12px rgba(84,84,233,0.55);
+}
+.persona__name{font-family:'Fraunces',serif;font-weight:700;font-size:34px;margin-bottom:6px}
+.persona__role{font-size:14px;color:var(--c-blue);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:18px}
+.persona__bio{font-size:16px;color:#2c2c3a;max-width:640px;margin-bottom:20px}
+.persona__bio strong{font-weight:700}
+.persona__traits{display:flex;flex-wrap:wrap;gap:9px}
+.trait{font-size:12.5px;font-weight:600;padding:7px 15px;border-radius:100px;background:var(--c-purple-tint);color:#5a3bb5}
+.scenario{
+  margin-top:26px;border-left:5px solid var(--c-orange);
+  background:linear-gradient(135deg,var(--c-orange-tint) 0%,#fff6ef 100%);
+  border-radius:0 16px 16px 0;padding:30px 36px;
+}
+.scenario h4{font-family:'Fraunces',serif;font-size:23px;font-weight:700;margin-bottom:10px}
+.scenario p{font-size:15.5px;color:#3a3030;max-width:760px}
+.scenario p strong{color:#a8431f}
+.scenario__kpis{display:flex;gap:34px;margin-top:22px;flex-wrap:wrap}
+.scenario__kpi b{display:block;font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:var(--c-orange);line-height:1}
+.scenario__kpi span{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--c-gray1);font-weight:700}
+
+/* ---------- LEGEND ---------- */
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.legend__item{
+  display:flex;align-items:center;gap:11px;
+  border:1px solid var(--c-gray3);border-radius:14px;padding:14px 20px;background:#fff;
+  font-size:14px;flex:1;min-width:260px;
+}
+.legend__dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.legend__dot--g{background:var(--c-green)}
+.legend__dot--a{background:var(--c-amber)}
+.legend__dot--r{background:var(--c-red)}
+.legend__item b{font-weight:700}
+.legend__item span{color:var(--c-gray1)}
+
+/* ---------- BLUEPRINT ---------- */
+.bp-section{background:var(--c-ink);padding:80px 0;color:#fff}
+.bp-section .eyebrow{color:var(--c-yellow)}
+.bp-section .section-title{color:#fff}
+.bp-section .section-title em{color:var(--c-yellow)}
+.bp-section .lead{color:rgba(255,255,255,0.74)}
+.scroll-hint{display:none;color:var(--c-yellow);font-size:13px;font-weight:600;margin:18px 0 8px}
+.bp-scroll{overflow-x:auto;margin-top:32px;padding-bottom:14px;border-radius:20px}
+.bp-wrap{min-width:1280px;border-radius:20px;overflow:hidden;background:#fff;color:var(--c-ink);
+  box-shadow:0 30px 80px -30px rgba(0,0,0,0.6)}
+.bp-grid{display:grid;grid-template-columns:170px repeat(6,1fr)}
+.bp-cell{padding:13px 14px;border-right:1px solid var(--c-gray3);border-bottom:1px solid var(--c-gray3);font-size:12.5px;line-height:1.42}
+.bp-cell:last-child{border-right:none}
+.bp-label{
+  font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;
+  display:flex;align-items:center;
+  background:var(--c-gray05);
+}
+
+/* header row */
+.bp-head{grid-column:1 / -1;
+  background:linear-gradient(110deg,var(--c-blue-deep) 0%,var(--c-blue) 55%,var(--c-purple) 100%);
+  color:#fff;padding:24px 26px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.bp-head__badge{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--c-yellow);font-weight:800;margin-bottom:6px}
+.bp-head__title{font-family:'Fraunces',serif;font-size:26px;font-weight:700}
+.bp-kpis{display:flex;gap:30px;flex-wrap:wrap}
+.bp-kpi b{display:block;font-size:22px;font-weight:800;line-height:1}
+.bp-kpi span{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;opacity:0.65;font-weight:700}
+
+/* steps header row */
+.bp-step{background:var(--c-gray05)}
+.bp-label--steps{color:var(--c-blue)}
+.bp-step__phase{font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:var(--c-blue);font-weight:800;margin-bottom:4px}
+.bp-step__title{font-weight:800;font-size:13.5px;color:var(--c-ink);margin-bottom:5px;text-transform:none;letter-spacing:0}
+.bp-step__screen{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--c-gray1)}
+
+/* emotion row */
+.bp-emo-label{color:var(--c-gray1);background:var(--c-gray05)}
+.bp-emotion{grid-column:2 / -1;background:var(--c-gray05);padding:0;position:relative}
+.bp-emotion__svg{width:100%;height:150px;display:block}
+
+/* touchpoints */
+.bp-label--tp{color:var(--c-orange)}
+.bp-tp{background:#fffef5}
+.bp-tp__icon{font-size:26px;line-height:1;margin-bottom:7px}
+.bp-tp__name{font-weight:700;font-size:12.5px;margin-bottom:4px}
+.bp-tp__comp{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--c-orange);word-break:break-all}
+
+/* frontstage user */
+.bp-label--fu{color:var(--c-blue)}
+.bp-fu{background:#fff}
+
+/* frontstage system */
+.bp-label--fs{color:var(--c-cyan)}
+.bp-fs{background:#fafbff}
+.status-dot{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;font-size:9px;font-weight:800;color:#fff;margin-right:5px;vertical-align:-2px}
+.status-dot--green{background:var(--c-green)}
+.status-dot--amber{background:var(--c-amber)}
+.status-dot--red{background:var(--c-red)}
+
+/* visibility line */
+.bp-line{grid-column:1 / -1;background:var(--c-ink);color:var(--c-yellow);
+  text-align:center;font-size:11px;font-weight:800;letter-spacing:0.22em;text-transform:uppercase;padding:9px}
+.bp-line--internal{background:var(--c-purple)}
+
+/* backstage */
+.bp-label--bs{color:var(--c-purple)}
+.bp-bs{background:#fdf7ff}
+
+/* tech support */
+.bp-label--tech{color:var(--c-cyan);background:#10101c}
+.bp-tech{background:#1a1a2e;color:#d9dae8}
+.tech-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:500;
+  padding:3px 8px;border-radius:6px;margin:0 4px 5px 0}
+.tech-tag--real{background:rgba(76,185,121,0.18);color:#7be0a5;border:1px solid rgba(76,185,121,0.4)}
+.tech-tag--mock{background:rgba(245,158,11,0.16);color:#ffce7a;border:1px solid rgba(245,158,11,0.4)}
+.tech-tag--future{background:rgba(233,30,99,0.16);color:#ff8fb4;border:1px solid rgba(233,30,99,0.4)}
+
+/* evidence */
+.bp-label--ev{color:var(--c-green)}
+.bp-ev{background:#f0fff5}
+.bp-ev__none{color:var(--c-gray1);font-style:italic}
+
+/* pain */
+.bp-label--pain{color:var(--c-red)}
+.bp-pain{background:#fff5f7}
+.pain-item{display:flex;gap:7px;align-items:flex-start;margin-bottom:7px;font-size:11.5px;line-height:1.35}
+.pain-item__icon{font-size:14px;flex-shrink:0}
+
+/* ---------- GAPS ---------- */
+.gaps-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:42px}
+.gap-card{border:1px solid var(--c-gray3);border-radius:18px;padding:28px 30px;background:#fff;position:relative}
+.gap-card__head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.gap-card__num{font-family:'Fraunces',serif;font-size:42px;font-weight:700;color:var(--c-red);line-height:0.8}
+.gap-card__phase{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--c-gray1);background:var(--c-gray05);padding:5px 11px;border-radius:100px}
+.gap-card h4{font-size:17px;font-weight:800;margin-bottom:8px}
+.gap-card p{font-size:13.5px;color:#444;margin-bottom:14px}
+.gap-card p strong{font-weight:700;color:var(--c-ink)}
+.gap-card__sug{font-size:13px;background:var(--c-blue-tint);color:var(--c-blue-deep);border-radius:12px;padding:12px 16px;font-weight:600}
+
+/* ---------- ROADMAP ---------- */
+.roadmap{display:flex;flex-direction:column;gap:22px;margin-top:42px}
+.horizon{border-radius:22px;padding:34px 38px;color:#fff;display:grid;grid-template-columns:130px 1fr;gap:28px;align-items:center}
+.horizon--h1{background:linear-gradient(120deg,#2f8f5b 0%,var(--c-green) 100%)}
+.horizon--h2{background:linear-gradient(120deg,var(--c-blue-deep) 0%,var(--c-blue) 100%)}
+.horizon--h3{background:linear-gradient(120deg,#5a3bb5 0%,var(--c-purple) 100%)}
+.horizon__badge{font-family:'Fraunces',serif;font-size:60px;font-weight:700;opacity:0.55;line-height:0.9}
+.horizon__badge small{display:block;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.85;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;margin-top:8px}
+.horizon__items{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.horizon__item{background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);border-radius:13px;padding:15px 18px}
+.horizon__item b{display:block;font-weight:800;font-size:14px;margin-bottom:3px}
+.horizon__item span{font-size:12px;opacity:0.88}
+
+/* ---------- TRANSITION ---------- */
+.transition{text-align:center;padding:64px 0 30px}
+.transition__arrow{font-family:'Fraunces',serif;font-size:70px;color:var(--c-blue);animation:arrowFall 2.2s ease-in-out infinite}
+@keyframes arrowFall{0%,100%{transform:translateY(0)}50%{transform:translateY(12px)}}
+.transition__quote{font-family:'Fraunces',serif;font-style:italic;font-size:26px;font-weight:600;margin-top:8px}
+.transition__sub{color:var(--c-gray1);font-size:15px;margin-top:8px}
+
+/* ---------- CLOSING ---------- */
+.closing{background:linear-gradient(135deg,var(--c-blue-deep) 0%,var(--c-ink) 100%);color:#fff;padding:100px 0;text-align:center}
+.closing__quote{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(24px,3.5vw,38px);font-weight:600;max-width:840px;margin:0 auto 18px;line-height:1.25}
+.closing__quote em{color:var(--c-yellow);font-style:italic}
+.closing cite{display:block;font-style:normal;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.65);font-weight:700;margin-top:24px}
+.closing__brand{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:46px}
+.closing__brand .brand-logo,.closing__brand .brand-icesi{color:#fff}
+.closing__brand .brand-divider{background:rgba(255,255,255,0.3)}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--c-ink);color:rgba(255,255,255,0.55);padding:34px 0;text-align:center;font-size:12.5px}
+footer p{margin:3px 0}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:1024px){
+  .ctx-grid,.gaps-grid{grid-template-columns:1fr}
+  .persona{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .persona__bio{margin-left:auto;margin-right:auto}
+  .persona__traits{justify-content:center}
+  .horizon{grid-template-columns:1fr;text-align:center}
+  .horizon__items{grid-template-columns:1fr}
+  .scroll-hint{display:block}
+}
+@media (max-width:680px){
+  .wrap{padding:0 24px}
+  .topnav{padding:12px 24px}
+  .topnav__links{display:none}
+  .topnav__title{display:none}
+  section.block{padding:62px 0}
+  .persona{padding:34px 26px}
+  .scenario__kpis{gap:22px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ TOPNAV ============ -->
+<nav class="topnav">
+  <div class="topnav__brand">
+    <span class="brand-logo">INN<span class="mono">LAB</span></span>
+    <span class="brand-divider"></span>
+    <span class="brand-icesi">Icesi</span>
+    <span class="topnav__title">· Service Blueprint · Fase 0</span>
+  </div>
+  <div class="topnav__links">
+    <a href="#contexto">Contexto</a>
+    <a href="#persona">Persona</a>
+    <a href="#blueprint">Blueprint</a>
+    <a href="#gaps">Hallazgos</a>
+    <a href="#roadmap">Roadmap</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero__bg"></div>
+  <div class="wrap">
+    <div class="hero__brand">
+      <span class="brand-logo">INN<span class="mono">LAB</span></span>
+      <span class="brand-divider"></span>
+      <span class="brand-icesi">Icesi</span>
+    </div>
+    <p class="hero__eyebrow">00 · Service Blueprint · Onboarding y pago PSE</p>
+    <h1 class="hero__title">Pagar con PSE,<br><em>radiografiado paso a paso.</em></h1>
+    <p class="hero__sub">Un mapa operativo del flujo de checkout, redirección a la pasarela y autenticación del pagador en Tienda Andina — desde lo que el usuario ve hasta el backstage que hoy es <strong>solo simulación</strong>.</p>
+    <div class="hero__meta">
+      <span class="hero__chip">🟢 Prototipo frontend mock</span>
+      <span class="hero__chip">6 pasos · 3 pantallas</span>
+      <span class="hero__chip">PSE / ACH Colombia</span>
+      <span class="hero__chip">Emoción promedio 5,3 / 10</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ CONTEXTO ============ -->
+<section class="block wrap" id="contexto">
+  <p class="eyebrow">01 · El servicio analizado</p>
+  <h2 class="section-title">Un checkout que <em>confía</em> en una pasarela que aún no existe.</h2>
+  <p class="lead">El prototipo representa el flujo de pago <strong>PSE — Débito a cuenta bancaria</strong> de un e-commerce demo, seguido de la autenticación o registro del usuario pagador. Es un frontend estático en HTML/CSS/JS vanilla: el carrito está hardcodeado, el banco es simulado y no hay validación real de credenciales. Todo lo que ocurre "detrás" es, por ahora, un <strong>setTimeout de 3 segundos</strong>.</p>
+  <p class="lead">Mapearlo importa porque revela exactamente dónde el prototipo termina y dónde tendrá que empezar la integración real con PSE, el banco emisor y el comercio — el límite entre lo que ya se siente como producto y lo que sigue siendo una promesa.</p>
+
+  <div class="ctx-grid">
+    <div class="ctx-card">
+      <h4>Fuente de verdad</h4>
+      <p>Prototipo funcional en <span class="mono">index.html</span> (3 pantallas: <span class="mono">screen-checkout</span>, <span class="mono">screen-loading</span>, <span class="mono">screen-auth</span>), lógica en <span class="mono">js/main.js</span> y estética de marca PSE en <span class="mono">css/styles.css</span>.</p>
+    </div>
+    <div class="ctx-card">
+      <h4>Estado</h4>
+      <p><strong>Sin backend real.</strong> Carrito mock, transiciones por <span class="mono">setTimeout</span>, validación mínima por atributos <span class="mono">required</span> del navegador. Cualquier dato no vacío "pasa".</p>
+    </div>
+    <div class="ctx-card">
+      <h4>Actores</h4>
+      <div class="ctx-actors">
+        <span class="actor-pill">Usuario comprador</span>
+        <span class="actor-pill">Tienda Andina</span>
+        <span class="actor-pill">PSE / ACH</span>
+        <span class="actor-pill">Banco emisor</span>
+        <span class="actor-pill">Sistema (frontend mock)</span>
+      </div>
+    </div>
+    <div class="ctx-card">
+      <h4>Bancos seleccionables</h4>
+      <p>Bancolombia, Davivienda, BBVA, Banco de Bogotá, Banco de Occidente, Nequi y Daviplata — hoy decorativos, mañana destino real del débito.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PERSONA ============ -->
+<section class="block wrap" id="persona">
+  <p class="eyebrow">02 · A quién le pasa esto</p>
+  <h2 class="section-title">La persona detrás del <em>"Ir a pagar".</em></h2>
+
+  <div class="persona">
+    <div class="persona__avatar">MR</div>
+    <div>
+      <div class="persona__name serif">Marcela Rúa</div>
+      <div class="persona__role">34 años · Dueña de tienda de insumos de belleza · Medellín</div>
+      <p class="persona__bio">Marcela reabastece su inventario en línea cada quincena. <strong>Desconfía de poner su tarjeta en sitios que no conoce</strong>, así que cuando ve la opción PSE respira tranquila: para ella es "pagar como en el banco". Hace todo desde el celular, entre cliente y cliente, y no tiene paciencia para formularios largos ni pantallas que se quedan girando.</p>
+      <div class="persona__traits">
+        <span class="trait">Prefiere débito directo</span>
+        <span class="trait">Móvil primero</span>
+        <span class="trait">Cliente Bancolombia</span>
+        <span class="trait">Bajo apetito de riesgo</span>
+        <span class="trait">Poco tiempo</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <h4 class="serif">Martes, 9:40 p.m.</h4>
+    <p>Cerró la caja del día y aprovecha para reabastecer esmaltes y tintes antes de dormir. Arma un carrito de <strong>3 productos</strong> en Tienda Andina y quiere pagarlo por PSE en menos de tres minutos, sin sacar la tarjeta y con la certeza de que el dinero salió de su cuenta de Bancolombia. Lo que no sabe es que, hoy, nada de eso pasa de verdad: la pasarela es una animación.</p>
+    <div class="scenario__kpis">
+      <div class="scenario__kpi"><b>$248.000</b><span>Total carrito</span></div>
+      <div class="scenario__kpi"><b>$12.000</b><span>Envío fijo</span></div>
+      <div class="scenario__kpi"><b>&lt; 3 min</b><span>Tiempo objetivo</span></div>
+      <div class="scenario__kpi"><b>3.000 ms</b><span>Espera "PSE"</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LEYENDA ============ -->
+<section class="block wrap">
+  <p class="eyebrow">03 · Cómo leer el blueprint</p>
+  <h2 class="section-title">Tres estados de <em>realidad.</em></h2>
+  <p class="lead">Cada celda del backstage y del soporte técnico está marcada según qué tan real es hoy. Es la clave para no confundir lo que ya funciona con lo que todavía es una maqueta.</p>
+  <div class="legend">
+    <div class="legend__item"><span class="legend__dot legend__dot--g"></span><div><b>🟢 Implementado</b> <span>— código frontend que ya corre en el prototipo.</span></div></div>
+    <div class="legend__item"><span class="legend__dot legend__dot--a"></span><div><b>🟡 Simulado / placeholder</b> <span>— existe pero es dummy (setTimeout, validación mínima).</span></div></div>
+    <div class="legend__item"><span class="legend__dot legend__dot--r"></span><div><b>🔴 Conceptual / futuro</b> <span>— integración real aún no construida.</span></div></div>
+  </div>
+</section>
+
+<!-- ============ BLUEPRINT ============ -->
+<section class="bp-section" id="blueprint">
+  <div class="wrap">
+    <p class="eyebrow">04 · El blueprint</p>
+    <h2 class="section-title">Fase 0, <em>capa por capa.</em></h2>
+    <p class="lead">Seis pasos del journey de Marcela, leídos en vertical: lo que hace, lo que el sistema le muestra, la línea de visibilidad, y debajo el backstage que hoy es mayormente humo. Los pasos 4 y 5 son los dos sub-carriles alternos de la fase de autenticación: <strong>Login</strong> de un pagador existente y <strong>Registro</strong> de uno nuevo.</p>
+    <p class="scroll-hint">→ Desliza horizontalmente para ver el blueprint completo</p>
+
+    <div class="bp-scroll">
+      <div class="bp-wrap">
+        <div class="bp-grid">
+
+          <!-- HEADER ROW -->
+          <div class="bp-head">
+            <div>
+              <div class="bp-head__badge">Service Blueprint · Estado actual (prototipo)</div>
+              <div class="bp-head__title serif">Pago PSE & autenticación · Tienda Andina</div>
+            </div>
+            <div class="bp-kpis">
+              <div class="bp-kpi"><b>6</b><span>Pasos</span></div>
+              <div class="bp-kpi"><b>3</b><span>Pantallas</span></div>
+              <div class="bp-kpi"><b>~2,5 min</b><span>Duración</span></div>
+              <div class="bp-kpi"><b>5,3</b><span>Emoción prom.</span></div>
+            </div>
+          </div>
+
+          <!-- STEPS HEADER -->
+          <div class="bp-cell bp-label bp-label--steps">Paso</div>
+          <div class="bp-cell bp-step"><div class="bp-step__phase">Fase 1 · Descubrimiento</div><div class="bp-step__title">Revisa el carrito</div><div class="bp-step__screen">screen-checkout</div></div>
+          <div class="bp-cell bp-step"><div class="bp-step__phase">Fase 2 · Método de pago</div><div class="bp-step__title">Elige PSE</div><div class="bp-step__screen">screen-checkout</div></div>
+          <div class="bp-cell bp-step"><div class="bp-step__phase">Fase 3 · Pasarela</div><div class="bp-step__title">Espera el "proceso"</div><div class="bp-step__screen">screen-loading</div></div>
+          <div class="bp-cell bp-step"><div class="bp-step__phase">Fase 4A · Login</div><div class="bp-step__title">Se autentica</div><div class="bp-step__screen">screen-auth · login</div></div>
+          <div class="bp-cell bp-step"><div class="bp-step__phase">Fase 4B · Registro</div><div class="bp-step__title">Crea su cuenta</div><div class="bp-step__screen">screen-auth · registro</div></div>
+          <div class="bp-cell bp-step"><div class="bp-step__phase">Fase 5 · Confirmación</div><div class="bp-step__title">Recibe el "listo"</div><div class="bp-step__screen">form-success</div></div>
+
+          <!-- EMOTION ROW -->
+          <div class="bp-cell bp-label bp-emo-label">Curva de<br>emoción</div>
+          <div class="bp-emotion">
+            <svg class="bp-emotion__svg" viewBox="0 0 1200 180" preserveAspectRatio="none">
+              <line x1="0" y1="36" x2="1200" y2="36" stroke="#e6e7eb" stroke-width="1" stroke-dasharray="3,4"/>
+              <line x1="0" y1="90" x2="1200" y2="90" stroke="#cecfd4" stroke-width="1" stroke-dasharray="3,4"/>
+              <line x1="0" y1="144" x2="1200" y2="144" stroke="#e6e7eb" stroke-width="1" stroke-dasharray="3,4"/>
+              <text x="8" y="14" font-size="9" fill="#88898c" font-weight="700">😍 10</text>
+              <text x="8" y="94" font-size="9" fill="#88898c" font-weight="700">😐 5</text>
+              <text x="8" y="174" font-size="9" fill="#88898c" font-weight="700">😡 0</text>
+              <defs>
+                <linearGradient id="emoX" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#4cb979" stop-opacity="0.35"/>
+                  <stop offset="50%" stop-color="#e4eb60" stop-opacity="0.25"/>
+                  <stop offset="100%" stop-color="#e91e63" stop-opacity="0.18"/>
+                </linearGradient>
+              </defs>
+              <!-- valores: 7,6,4,6,4,5  →  y = 144 - v*14 : 46,60,88,60,88,74 -->
+              <path d="M 100 46 C 175 50, 225 56, 300 60 S 425 88, 500 88 S 625 60, 700 60 S 825 88, 900 88 S 1025 74, 1100 74 L 1100 180 L 100 180 Z" fill="url(#emoX)" opacity="0.7"/>
+              <path d="M 100 46 C 175 50, 225 56, 300 60 S 425 88, 500 88 S 625 60, 700 60 S 825 88, 900 88 S 1025 74, 1100 74" stroke="#5454e9" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <!-- punto 1 v7 -->
+              <text x="100" y="34" font-size="20" text-anchor="middle">🙂</text>
+              <circle cx="100" cy="46" r="9" fill="#fff" stroke="#4cb979" stroke-width="3"/>
+              <text x="100" y="50" font-size="11" font-weight="700" text-anchor="middle" fill="#2f8f5b">7</text>
+              <!-- punto 2 v6 -->
+              <text x="300" y="48" font-size="20" text-anchor="middle">😐</text>
+              <circle cx="300" cy="60" r="9" fill="#fff" stroke="#f59e0b" stroke-width="3"/>
+              <text x="300" y="64" font-size="11" font-weight="700" text-anchor="middle" fill="#b9760a">6</text>
+              <!-- punto 3 v4 -->
+              <text x="500" y="76" font-size="20" text-anchor="middle">😕</text>
+              <circle cx="500" cy="88" r="9" fill="#fff" stroke="#e9683b" stroke-width="3"/>
+              <text x="500" y="92" font-size="11" font-weight="700" text-anchor="middle" fill="#c14a21">4</text>
+              <!-- punto 4 v6 -->
+              <text x="700" y="48" font-size="20" text-anchor="middle">😐</text>
+              <circle cx="700" cy="60" r="9" fill="#fff" stroke="#f59e0b" stroke-width="3"/>
+              <text x="700" y="64" font-size="11" font-weight="700" text-anchor="middle" fill="#b9760a">6</text>
+              <!-- punto 5 v4 -->
+              <text x="900" y="76" font-size="20" text-anchor="middle">😕</text>
+              <circle cx="900" cy="88" r="9" fill="#fff" stroke="#e9683b" stroke-width="3"/>
+              <text x="900" y="92" font-size="11" font-weight="700" text-anchor="middle" fill="#c14a21">4</text>
+              <!-- punto 6 v5 -->
+              <text x="1100" y="62" font-size="20" text-anchor="middle">😐</text>
+              <circle cx="1100" cy="74" r="9" fill="#fff" stroke="#f59e0b" stroke-width="3"/>
+              <text x="1100" y="78" font-size="11" font-weight="700" text-anchor="middle" fill="#b9760a">5</text>
+            </svg>
+          </div>
+
+          <!-- A · TOUCHPOINTS -->
+          <div class="bp-cell bp-label bp-label--tp">A · Touchpoints</div>
+          <div class="bp-cell bp-tp"><div class="bp-tp__icon">🛒</div><div class="bp-tp__name">Resumen de compra</div><div class="bp-tp__comp">checkout__summary · cart-list</div></div>
+          <div class="bp-cell bp-tp"><div class="bp-tp__icon">🔘</div><div class="bp-tp__name">Radios de pago + CTA</div><div class="bp-tp__comp">payment-option · btn-go-pay</div></div>
+          <div class="bp-cell bp-tp"><div class="bp-tp__icon">⏳</div><div class="bp-tp__name">Loader PSE + stepper</div><div class="bp-tp__comp">screen-loading</div></div>
+          <div class="bp-cell bp-tp"><div class="bp-tp__icon">🏦</div><div class="bp-tp__name">Tabs + método banco/portal</div><div class="bp-tp__comp">login-method-banco</div></div>
+          <div class="bp-cell bp-tp"><div class="bp-tp__icon">📝</div><div class="bp-tp__name">Formulario de registro</div><div class="bp-tp__comp">form-registro · 9 campos</div></div>
+          <div class="bp-cell bp-tp"><div class="bp-tp__icon">✅</div><div class="bp-tp__name">Mensaje de éxito</div><div class="bp-tp__comp">form-success</div></div>
+
+          <!-- B · FRONTSTAGE USUARIO -->
+          <div class="bp-cell bp-label bp-label--fu">B · Acción del usuario</div>
+          <div class="bp-cell bp-fu">Revisa 3 productos, ve subtotal + envío $12.000 = total $248.000.</div>
+          <div class="bp-cell bp-fu">Selecciona "PSE — Débito a cuenta bancaria". (Tarjeta aparece deshabilitada.)</div>
+          <div class="bp-cell bp-fu">Espera sin poder hacer nada mientras la pantalla "procesa".</div>
+          <div class="bp-cell bp-fu">Elige "Pagar desde mi banco", escoge Bancolombia e ingresa su correo.</div>
+          <div class="bp-cell bp-fu"><em>(Carril alterno)</em> Usuario nuevo llena documento, correo, nombres, apellidos y celular.</div>
+          <div class="bp-cell bp-fu">Lee "¡Formulario enviado!" y asume que el pago quedó hecho.</div>
+
+          <!-- C · FRONTSTAGE SISTEMA -->
+          <div class="bp-cell bp-label bp-label--fs">C · Sistema visible</div>
+          <div class="bp-cell bp-fs"><span class="status-dot status-dot--green">✓</span>renderCart() pinta el carrito y calcula subtotal + envío = total.</div>
+          <div class="bp-cell bp-fs"><span class="status-dot status-dot--green">✓</span>initPaymentSelection() habilita el botón "Ir a pagar" al elegir PSE.</div>
+          <div class="bp-cell bp-fs"><span class="status-dot status-dot--amber">≈</span>setTimeout(3000) muestra spinner y stepper, luego salta a screen-auth.</div>
+          <div class="bp-cell bp-fs"><span class="status-dot status-dot--green">✓</span>updateVisibility() + validateSubmit() habilitan "Ingresar" si hay datos.</div>
+          <div class="bp-cell bp-fs"><span class="status-dot status-dot--amber">≈</span>Validación por atributos required del navegador, sin chequeo de formato.</div>
+          <div class="bp-cell bp-fs"><span class="status-dot status-dot--green">✓</span>Oculta el formulario y revela el bloque de éxito.</div>
+
+          <!-- VISIBILITY LINE -->
+          <div class="bp-line">━━━  Línea de visibilidad  ·  arriba lo que Marcela ve, abajo lo que no  ━━━</div>
+
+          <!-- D · BACKSTAGE -->
+          <div class="bp-cell bp-label bp-label--bs">D · Backstage</div>
+          <div class="bp-cell bp-bs"><span class="status-dot status-dot--red">○</span>Catálogo, motor de precios e inventario. Hoy: arreglo CART hardcodeado en JS.</div>
+          <div class="bp-cell bp-bs"><span class="status-dot status-dot--red">○</span>Ninguno aún — no hay llamada a pasarela ni reserva de fondos.</div>
+          <div class="bp-cell bp-bs"><span class="status-dot status-dot--red">○</span>Tokenización, registro en ACH/PSE y ruteo al banco destino. Hoy inexistente.</div>
+          <div class="bp-cell bp-bs"><span class="status-dot status-dot--red">○</span>Autenticación contra banco emisor o portal PSE. Hoy nada se valida.</div>
+          <div class="bp-cell bp-bs"><span class="status-dot status-dot--red">○</span>Creación de cliente, verificación de identidad (KYC) y deduplicación.</div>
+          <div class="bp-cell bp-bs"><span class="status-dot status-dot--red">○</span>Notificación al comercio, generación de comprobante y webhook de cierre.</div>
+
+          <!-- INTERNAL INTERACTION LINE -->
+          <div class="bp-line bp-line--internal">─ ─ ─  Línea de interacción interna  ·  mock local (hoy)  vs  soporte real (futuro)  ─ ─ ─</div>
+
+          <!-- E · SOPORTE TÉCNICO -->
+          <div class="bp-cell bp-label bp-label--tech">E · Soporte técnico</div>
+          <div class="bp-cell bp-tech"><span class="tech-tag tech-tag--mock">CART[] mock</span><span class="tech-tag tech-tag--real">renderCart()</span><span class="tech-tag tech-tag--future">API catálogo</span></div>
+          <div class="bp-cell bp-tech"><span class="tech-tag tech-tag--real">initPaymentSelection()</span><span class="tech-tag tech-tag--future">gateway pagos</span></div>
+          <div class="bp-cell bp-tech"><span class="tech-tag tech-tag--mock">window.setTimeout</span><span class="tech-tag tech-tag--future">PSE / ACH API</span><span class="tech-tag tech-tag--future">antifraude</span></div>
+          <div class="bp-cell bp-tech"><span class="tech-tag tech-tag--real">validateSubmit()</span><span class="tech-tag tech-tag--future">auth bancaria</span><span class="tech-tag tech-tag--future">MFA / OTP</span></div>
+          <div class="bp-cell bp-tech"><span class="tech-tag tech-tag--mock">required HTML</span><span class="tech-tag tech-tag--future">KYC</span><span class="tech-tag tech-tag--future">valid. documento</span></div>
+          <div class="bp-cell bp-tech"><span class="tech-tag tech-tag--future">notificaciones</span><span class="tech-tag tech-tag--future">webhook comercio</span><span class="tech-tag tech-tag--future">PDF comprobante</span></div>
+
+          <!-- F · EVIDENCIA -->
+          <div class="bp-cell bp-label bp-label--ev">F · Evidencia</div>
+          <div class="bp-cell bp-ev">Monto total visible antes de pagar.</div>
+          <div class="bp-cell bp-ev">Estado del botón (habilitado / deshabilitado).</div>
+          <div class="bp-cell bp-ev"><span class="bp-ev__none">Nada persiste — pantalla transitoria.</span></div>
+          <div class="bp-cell bp-ev">Mensaje login-success en pantalla.</div>
+          <div class="bp-cell bp-ev">Mensaje registro-success en pantalla.</div>
+          <div class="bp-cell bp-ev">Mensaje de éxito. <span class="bp-ev__none">Sin comprobante descargable.</span></div>
+
+          <!-- G · PAIN POINTS -->
+          <div class="bp-cell bp-label bp-label--pain">G · Puntos de dolor</div>
+          <div class="bp-cell bp-pain"><div class="pain-item"><span class="pain-item__icon">⚠️</span>Carrito no editable</div><div class="pain-item"><span class="pain-item__icon">🚫</span>No se pueden quitar ítems</div></div>
+          <div class="bp-cell bp-pain"><div class="pain-item"><span class="pain-item__icon">👀</span>Tarjeta visible pero inutilizable</div><div class="pain-item"><span class="pain-item__icon">📋</span>Sin claridad de por qué</div></div>
+          <div class="bp-cell bp-pain"><div class="pain-item"><span class="pain-item__icon">⏱️</span>3 s fijos, no latencia real</div><div class="pain-item"><span class="pain-item__icon">❌</span>Sin manejo de timeout/error</div></div>
+          <div class="bp-cell bp-pain"><div class="pain-item"><span class="pain-item__icon">🔓</span>Cualquier dato no vacío pasa</div><div class="pain-item"><span class="pain-item__icon">📵</span>Sin MFA ni vínculo real al banco</div></div>
+          <div class="bp-cell bp-pain"><div class="pain-item"><span class="pain-item__icon">📝</span>Sin validación de formato</div><div class="pain-item"><span class="pain-item__icon">🔄</span>Sin manejo de "ya existe"</div></div>
+          <div class="bp-cell bp-pain"><div class="pain-item"><span class="pain-item__icon">🚪</span>Sin cierre ni retorno al comercio</div><div class="pain-item"><span class="pain-item__icon">🌫️</span>Flujo termina en el limbo</div></div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRANSITION ============ -->
+<section class="transition wrap">
+  <div class="transition__arrow">↓</div>
+  <p class="transition__quote serif">¿Y si la animación <em>fuera de verdad?</em></p>
+  <p class="transition__sub">Los puntos rojos del blueprint son el contrato de lo que falta construir.</p>
+</section>
+
+<!-- ============ GAPS ============ -->
+<section class="block wrap" id="gaps">
+  <p class="eyebrow">05 · Hallazgos y gaps</p>
+  <h2 class="section-title">Cuatro fricciones que el blueprint <em>deja al descubierto.</em></h2>
+  <p class="lead">No son bugs del prototipo: son decisiones de producto pendientes. Cada una corresponde a una celda roja o ámbar del blueprint.</p>
+
+  <div class="gaps-grid">
+    <div class="gap-card">
+      <div class="gap-card__head"><span class="gap-card__num serif">01</span><span class="gap-card__phase">Fase 1 · Carrito</span></div>
+      <h4>Carrito sin edición</h4>
+      <p>El usuario no puede cambiar cantidades ni eliminar productos. <strong>El total es inamovible</strong> una vez en el checkout, lo que obliga a abandonar y rehacer si algo está mal.</p>
+      <div class="gap-card__sug">→ Sugerencia: stepper de cantidad y botón de eliminar por ítem, con recálculo en vivo del total.</div>
+    </div>
+    <div class="gap-card">
+      <div class="gap-card__head"><span class="gap-card__num serif">02</span><span class="gap-card__phase">Fase 3 · Pasarela</span></div>
+      <h4>Timeout fijo sin manejo de error</h4>
+      <p>La espera "PSE" es un <strong>setTimeout de 3.000 ms</strong> que no refleja latencia real ni contempla caídas de conexión, rechazos del banco o timeouts. Es el mayor punto de riesgo para la Fase 1 del roadmap.</p>
+      <div class="gap-card__sug">→ Sugerencia: estados reales (procesando / aprobado / rechazado / expirado) con reintento y mensajería clara.</div>
+    </div>
+    <div class="gap-card">
+      <div class="gap-card__head"><span class="gap-card__num serif">03</span><span class="gap-card__phase">Fase 4 · Auth</span></div>
+      <h4>Validaciones débiles</h4>
+      <p>El login acepta <strong>cualquier dato no vacío</strong> y el registro solo usa <span class="mono">required</span>: sin validación de formato de correo, documento o celular, y sin manejo de usuario duplicado.</p>
+      <div class="gap-card__sug">→ Sugerencia: validación de formato en cliente + verificación contra banco/PSE y deduplicación en servidor.</div>
+    </div>
+    <div class="gap-card">
+      <div class="gap-card__head"><span class="gap-card__num serif">04</span><span class="gap-card__phase">Fase 5 · Cierre</span></div>
+      <h4>Flujo sin cierre</h4>
+      <p>Tras el éxito no hay retorno al comercio ni comprobante descargable. <strong>El flujo termina "en el limbo"</strong>, a diferencia del Portal de Usuarios ACH que sí contempla PDF.</p>
+      <div class="gap-card__sug">→ Sugerencia: botón "Volver a la tienda", comprobante PDF y redirección con estado de la transacción.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROADMAP ============ -->
+<section class="block wrap" id="roadmap">
+  <p class="eyebrow">06 · Siguientes pasos</p>
+  <h2 class="section-title">De la maqueta al <em>pago real.</em></h2>
+  <p class="lead">Alineado con el roadmap del Portal de Usuarios ACH: primero cerrar los gaps de UX, luego conectar el backend real y finalmente la capa de seguridad y notificaciones.</p>
+
+  <div class="roadmap">
+    <div class="horizon horizon--h1">
+      <div class="horizon__badge serif">H1<small>Corto plazo</small></div>
+      <div class="horizon__items">
+        <div class="horizon__item"><b>Carrito editable</b><span>Cantidades, eliminar ítem y recálculo en vivo.</span></div>
+        <div class="horizon__item"><b>Cierre de flujo</b><span>Botón "Volver a la tienda" + estado claro.</span></div>
+        <div class="horizon__item"><b>Validación de formato</b><span>Correo, documento y celular en cliente.</span></div>
+        <div class="horizon__item"><b>Tarjeta: decidir</b><span>Ocultar o etiquetar "próximamente".</span></div>
+      </div>
+    </div>
+    <div class="horizon horizon--h2">
+      <div class="horizon__badge serif">H2<small>Mediano plazo</small></div>
+      <div class="horizon__items">
+        <div class="horizon__item"><b>Integración PSE / ACH</b><span>Tokenización y registro de transacción reales.</span></div>
+        <div class="horizon__item"><b>Estados de pago</b><span>Procesando / aprobado / rechazado / expirado.</span></div>
+        <div class="horizon__item"><b>Auth bancaria</b><span>Login real contra banco emisor o portal PSE.</span></div>
+        <div class="horizon__item"><b>Webhook al comercio</b><span>Confirmación de pago y comprobante PDF.</span></div>
+      </div>
+    </div>
+    <div class="horizon horizon--h3">
+      <div class="horizon__badge serif">H3<small>Largo plazo</small></div>
+      <div class="horizon__items">
+        <div class="horizon__item"><b>Antifraude</b><span>Scoring de riesgo y reglas en el gateway.</span></div>
+        <div class="horizon__item"><b>MFA / OTP</b><span>Segundo factor en la autorización del pago.</span></div>
+        <div class="horizon__item"><b>KYC y deduplicación</b><span>Verificación de identidad en el registro.</span></div>
+        <div class="horizon__item"><b>Notificaciones</b><span>Email / SMS de confirmación al pagador.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSING ============ -->
+<section class="closing">
+  <div class="wrap">
+    <p class="closing__quote serif">El prototipo ya sabe <em>verse</em> como un pago PSE. El blueprint marca, celda por celda, todo lo que falta para que <em>sea</em> uno.</p>
+    <cite>Service Blueprint · Fase 0 · INNLAB / Icesi</cite>
+    <div class="closing__brand">
+      <span class="brand-logo">INN<span class="mono">LAB</span></span>
+      <span class="brand-divider"></span>
+      <span class="brand-icesi">Icesi</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <p>© Universidad Icesi · INNLAB</p>
+  <p>Documento de trabajo. El flujo descrito es un prototipo frontend; las integraciones con PSE, ACH, bancos y antifraude son conceptuales.</p>
+</footer>
+
+</body>
+</html>
