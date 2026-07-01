@@ -129,12 +129,36 @@ body {
 .hab-list { list-style:none; margin-bottom:14px; }
 .hab-item {
   font-size:11px; color:#6b7f94;
-  padding:4px 0 4px 13px; position:relative;
+  padding:4px 22px 4px 13px; position:relative;
   line-height:1.45;
   border-bottom:1px solid rgba(255,255,255,0.035);
 }
 .hab-item:last-child { border-bottom:none; }
 .hab-item::before { content:'›'; position:absolute; left:0; color:var(--blue); opacity:.6; }
+.hab-item-text { display:block; }
+.hab-info-btn {
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  border:1px solid rgba(96,165,250,0.4);
+  background:rgba(0,95,163,0.15);
+  color:#93c5fd;
+  font-size:9px;
+  font-weight:800;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  position:absolute;
+  top:4px;
+  right:0;
+  padding:0;
+}
+.hab-info-btn:hover {
+  background:rgba(0,95,163,0.32);
+  border-color:rgba(147,197,253,0.7);
+}
 
 /* ── CU CARDS ── */
 .cu-stack { display:flex; flex-direction:column; gap:5px; }
@@ -341,6 +365,104 @@ body {
   text-align: center;
   font-weight: 500;
 }
+
+/* ── HABILITADOR MODAL ── */
+.hab-modal-overlay {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  z-index:700;
+}
+.hab-modal-overlay.on { display:block; }
+.hab-modal {
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  width:min(680px, 92vw);
+  max-height:80vh;
+  overflow:auto;
+  background:#0c1e2f;
+  border:1px solid rgba(168,196,216,0.2);
+  border-radius:12px;
+  box-shadow:0 24px 60px rgba(0,0,0,0.45);
+  padding:18px 18px 16px;
+  z-index:710;
+  display:none;
+}
+.hab-modal.on { display:block; }
+.hab-modal-top {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.hab-modal-id {
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#60a5fa;
+  font-weight:800;
+}
+.hab-modal-title {
+  font-size:16px;
+  color:#fff;
+  font-weight:700;
+  margin-top:2px;
+}
+.hab-modal-close {
+  width:26px;
+  height:26px;
+  border-radius:6px;
+  border:none;
+  background:rgba(255,255,255,0.08);
+  color:#94a3b8;
+  cursor:pointer;
+  font-size:14px;
+}
+.hab-modal-close:hover {
+  background:rgba(255,255,255,0.16);
+  color:#fff;
+}
+.hab-modal-body {
+  font-size:13px;
+  line-height:1.65;
+  color:#cbd5e1;
+}
+.hab-modal-meta {
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:12px;
+}
+.hab-chip {
+  font-size:10px;
+  color:#93c5fd;
+  border:1px solid rgba(147,197,253,0.25);
+  background:rgba(0,95,163,0.15);
+  border-radius:999px;
+  padding:3px 8px;
+}
+.hab-modal-section {
+  margin-top:10px;
+}
+.hab-modal-section-title {
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.11em;
+  color:#60a5fa;
+  margin-bottom:4px;
+  font-weight:700;
+}
+.hab-list-mini {
+  margin:0;
+  padding-left:16px;
+}
+.hab-list-mini li {
+  margin-bottom:4px;
+}
 </style>
 </head>
 <body>
@@ -396,6 +518,40 @@ body {
   <div class="panel-body" id="p-body"></div>
 </div>
 
+<div class="hab-modal-overlay" id="hab-overlay" onclick="closeHabModal()"></div>
+<div class="hab-modal" id="hab-modal">
+  <div class="hab-modal-top">
+    <div>
+      <div class="hab-modal-id" id="hab-id"></div>
+      <div class="hab-modal-title" id="hab-title"></div>
+    </div>
+    <button class="hab-modal-close" onclick="closeHabModal()">✕</button>
+  </div>
+  <div class="hab-modal-meta" id="hab-meta"></div>
+  <div class="hab-modal-body">
+    <div class="hab-modal-section">
+      <div class="hab-modal-section-title">Resumen</div>
+      <div id="hab-body"></div>
+    </div>
+    <div class="hab-modal-section">
+      <div class="hab-modal-section-title">Que Habilita</div>
+      <ul class="hab-list-mini" id="hab-enables"></ul>
+    </div>
+    <div class="hab-modal-section">
+      <div class="hab-modal-section-title">Prerequisitos</div>
+      <ul class="hab-list-mini" id="hab-prereq"></ul>
+    </div>
+    <div class="hab-modal-section">
+      <div class="hab-modal-section-title">Relacion de Dependencias</div>
+      <ul class="hab-list-mini" id="hab-blocks"></ul>
+    </div>
+    <div class="hab-modal-section">
+      <div class="hab-modal-section-title">Consideraciones Clave</div>
+      <ul class="hab-list-mini" id="hab-considerations"></ul>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ===== DATA ===== */
 const fichas = {
@@ -445,6 +601,197 @@ const olas = [
   cus:[{f:1,a:"PSE como instrumento en POS físico y como opción en redes sociales y apps de terceros"},{f:4,a:"Cuentas en bancos del exterior y fondos de inversión visibles en el portal (H2)"},{f:7,a:"PSE agéntico completo: compras, pagos y transferencias por instrucción en lenguaje natural"},{f:5,a:"Hagamos vaca / split payments: pago colectivo desde múltiples usuarios para un mismo fin"},{f:7,a:"Rentabilización automática de excedentes de tesorería desde el gestor financiero"},{f:17,a:"White Label de capacidades de dispersión para bancos aliados y cooperativas"},{f:25,a:"PSE como plataforma/infraestructura como servicio para terceros que requieren transaccionalidad sin construir desde cero"}]}
 ];
 
+const habIdsByOla = {
+  0:["HAB-01","HAB-02","HAB-03","HAB-04","HAB-05","HAB-06","HAB-07"],
+  1:["HAB-08","HAB-09","HAB-10","HAB-11","HAB-12","HAB-13","HAB-14"],
+  2:["HAB-15","HAB-16","HAB-17","HAB-18","HAB-19","HAB-20","HAB-21"],
+  3:["HAB-22","HAB-23","HAB-24","HAB-25","HAB-26","HAB-27"],
+  4:["HAB-28","HAB-29","HAB-30","HAB-31","HAB-32"]
+};
+
+const habCatalog = {
+  "HAB-01":{titulo:"Auditoria y depuracion de datos de usuarios",desc:"Depura y gobierna la calidad de datos de usuarios para eliminar duplicados, inconsistencias y registros incompletos. Es prerequisito de identidad, DataLake, IA y control de fraude."},
+  "HAB-02":{titulo:"Portal PSE base y autenticacion propia",desc:"Construye el portal como producto digital de ACH con autenticacion propia (no dependiente del banco). Crea el primer punto de contacto directo ACH-usuario."},
+  "HAB-03":{titulo:"Habilitacion legal como PSP",desc:"Gestion regulatoria ante la SFC para operar con mayor autonomia servicios como BNPL, escrow y remesas. Bloqueante para varias capacidades de Ola 2 y 3."},
+  "HAB-04":{titulo:"Enrolamiento de usuarios en el portal",desc:"Define y ejecuta la migracion de usuarios al Portal PSE con verificacion y consentimientos. Habilita masa critica para personalizacion y uso continuo."},
+  "HAB-05":{titulo:"Optimizacion del flujo transaccional actual",desc:"Mejora el flujo existente con menos campos, reintentos automaticos y mensajes de error claros. Impacta conversion en el corto plazo sin reemplazar el core."},
+  "HAB-06":{titulo:"Primer modulo de integracion unificada",desc:"Lanza la API inicial estandar para integrarse con fintechs y billeteras con sandbox y certificacion simplificada. Base de la API unica de Ola 1."},
+  "HAB-07":{titulo:"Primeras alianzas con fintechs y billeteras",desc:"Activa alianzas con actores agiles del ecosistema para no depender de los tiempos de bancos grandes. Acelera Open Finance H1, BNPL y remesas."},
+  "HAB-08":{titulo:"Debito unico",desc:"Unifica en un solo mecanismo el debito desde cualquier instrumento (cuenta, tarjeta, billetera, credito). Es el corazon del desacople arquitectonico."},
+  "HAB-09":{titulo:"Credito unico",desc:"Unifica la acreditacion a cualquier destino (cuentas, billeteras, tarjetas) con una sola capacidad reusable. Clave para dispersion, remesas y cashback."},
+  "HAB-10":{titulo:"Reversion estandar",desc:"Estandariza devoluciones y reversos con trazabilidad completa por motivo y estado. Cierra el ciclo transaccional y soporta casos de escrow y BNPL."},
+  "HAB-11":{titulo:"Identidad unificada y biometria",desc:"Identifica de forma univoca al iniciador de la transaccion y habilita autenticacion biometrica. Base para fraude, KYC continuo y personalizacion."},
+  "HAB-12":{titulo:"Control de fraude centralizado",desc:"Saca el fraude de silos por producto y lo centraliza con visibilidad total del usuario y su comportamiento. Debe operar en tiempo real y con baja friccion."},
+  "HAB-13":{titulo:"DataLake unificado",desc:"Consolida datos transaccionales de todo ACH en un repositorio unico con gobernanza. Habilita IA, reporteria unificada, segmentacion y monetizacion de datos."},
+  "HAB-14":{titulo:"API unica para bancos y comercios",desc:"Estandariza la integracion del ecosistema con un solo contrato API, portal de desarrolladores y versionamiento. Reduce tiempos de incorporacion de meses a dias."},
+  "HAB-15":{titulo:"Integracion con fintechs y billeteras (H1)",desc:"Formaliza integraciones iniciales para agregacion de cuentas en personas y empresas sin esperar cobertura regulatoria total de Open Finance."},
+  "HAB-16":{titulo:"Modulo de agregacion de cuentas",desc:"Normaliza y consolida datos de cuentas multi-entidad con conectores parametricos y gestion de consentimientos. Nucleo tecnico del hub financiero."},
+  "HAB-17":{titulo:"Onboarding automatizado con IA",desc:"Automatiza registro y validacion de usuarios/comercios con verificacion documental e identidad en tiempo real. Reduce activacion de semanas a horas."},
+  "HAB-18":{titulo:"KYC continuo",desc:"Evoluciona el KYC de validacion inicial a monitoreo permanente del perfil de riesgo durante todo el ciclo de vida del cliente."},
+  "HAB-19":{titulo:"Modulo BNPL con originadores",desc:"Integra originadores de credito para ofrecer BNPL en checkout en tiempo real sin que ACH asuma riesgo crediticio directo."},
+  "HAB-20":{titulo:"Tarjeta prepago virtual con sponsor",desc:"Habilita tarjeta PSE via banco sponsor para emision y franquicia. ACH controla la experiencia y reglas de uso en el portal."},
+  "HAB-21":{titulo:"Modulo de factoring con RADIAN/DIAN",desc:"Integra RADIAN para lectura/validacion de facturas y negociacion digital. Soporta factoring MVP y confirming empresarial."},
+  "HAB-22":{titulo:"Capa multi-moneda",desc:"Extiende debito/credito/reversion para operar en divisas con conversion y liquidacion trazable. Prerequisito de remesas y crossborder."},
+  "HAB-23":{titulo:"Integracion con operadores de remesas",desc:"Conecta operadores internacionales para notificar y acreditar remesas en tiempo real al usuario, con opciones inmediatas de disposicion."},
+  "HAB-24":{titulo:"Modulo de escrow digital",desc:"Gestiona retencion y liberacion condicional de fondos con motor de reglas, tiempos y disputas. Habilita escrow B2C y B2B."},
+  "HAB-25":{titulo:"Marco legal del escrow",desc:"Define y obtiene la base regulatoria para custodiar fondos de terceros con segregacion y reglas claras de responsabilidad."},
+  "HAB-26":{titulo:"Plataforma de marketing de pagos",desc:"Activa descuentos, cashback y beneficios mediante segmentacion y reglas sobre datos anonimizados, con panel para anunciantes."},
+  "HAB-27":{titulo:"Gestor financiero con IA",desc:"Construye capacidades analiticas, consultivas y luego ejecutivas para finanzas personales. Base del PSE agentico de la ola final."},
+  "HAB-28":{titulo:"Integracion con POS y cajeros",desc:"Lleva PSE al canal fisico (POS/pinpad/cajero) via integracion con adquirencia y esquemas interoperables."},
+  "HAB-29":{titulo:"Pagos desde redes sociales y apps",desc:"Permite pagos embebidos desde WhatsApp, TikTok, Instagram y apps de terceros usando APIs/SDK de PSE."},
+  "HAB-30":{titulo:"PSE agentico y MCP",desc:"Expone capacidades de pago a agentes de IA via MCP con autorizacion delegada, trazabilidad y limites de seguridad por usuario."},
+  "HAB-31":{titulo:"White Label para terceros",desc:"Empaqueta capacidades core de ACH como modulos comercializables a bancos, cooperativas y fintechs sin construir infraestructura desde cero."},
+  "HAB-32":{titulo:"Agregacion de cuentas internacionales",desc:"Extiende la agregacion a bancos y servicios del exterior para una vista financiera global en el portal."}
+};
+
+const habCapaMap = {
+  "L1 — Ecosistema": ["HAB-07","HAB-15","HAB-20","HAB-23","HAB-28","HAB-29","HAB-31","HAB-32"],
+  "L2 — Integracion unificada": ["HAB-06","HAB-14","HAB-16","HAB-19","HAB-21","HAB-29","HAB-30","HAB-31"],
+  "L3 — Compensacion y liquidacion": ["HAB-01","HAB-13","HAB-22"],
+  "L4 — Capacidades financieras core": ["HAB-08","HAB-09","HAB-10","HAB-19","HAB-24"],
+  "L5 — Orquestacion y control": ["HAB-02","HAB-04","HAB-11","HAB-12","HAB-16","HAB-17","HAB-18","HAB-26","HAB-27","HAB-30"],
+  "Regulatorio / Gobernanza": ["HAB-03","HAB-25"]
+};
+
+const habPriority = {
+  "HAB-01":"Bloqueante", "HAB-03":"Critica", "HAB-08":"Critica", "HAB-11":"Critica", "HAB-13":"Alta", "HAB-22":"Alta", "HAB-25":"Alta"
+};
+
+const habPrereqMap = {
+  "HAB-04":["HAB-01","HAB-02"],
+  "HAB-10":["HAB-08","HAB-09"],
+  "HAB-12":["HAB-11","HAB-13"],
+  "HAB-14":["HAB-06","HAB-08","HAB-09","HAB-10"],
+  "HAB-15":["HAB-07","HAB-14"],
+  "HAB-16":["HAB-11","HAB-15"],
+  "HAB-17":["HAB-11","HAB-14"],
+  "HAB-18":["HAB-11","HAB-13"],
+  "HAB-19":["HAB-08","HAB-14"],
+  "HAB-20":["HAB-15","HAB-16"],
+  "HAB-21":["HAB-09","HAB-14"],
+  "HAB-23":["HAB-09","HAB-22"],
+  "HAB-24":["HAB-08","HAB-09","HAB-10","HAB-25"],
+  "HAB-26":["HAB-11","HAB-13"],
+  "HAB-27":["HAB-13","HAB-16"],
+  "HAB-28":["HAB-11","HAB-20"],
+  "HAB-29":["HAB-11","HAB-14"],
+  "HAB-30":["HAB-11","HAB-14","HAB-27"],
+  "HAB-31":["HAB-14"],
+  "HAB-32":["HAB-16","HAB-22"]
+};
+
+const habBlocksMap = {
+  "HAB-01":["HAB-04","HAB-13","HAB-17","HAB-27"],
+  "HAB-03":["HAB-25 y servicios regulados de Ola 2/3"],
+  "HAB-08":["HAB-09","HAB-10","HAB-19","HAB-24"],
+  "HAB-11":["HAB-12","HAB-18","HAB-30"],
+  "HAB-13":["HAB-12","HAB-18","HAB-26","HAB-27"],
+  "HAB-22":["HAB-23","HAB-32"],
+  "HAB-25":["HAB-24"]
+};
+
+const habEnablesMap = {
+  "HAB-01":["Identidad unificada","DataLake confiable","Modelos de IA y fraude"],
+  "HAB-03":["BNPL interoperable","Escrow regulado","Remesas/crossborder"],
+  "HAB-08":["Debito multi-instrumento","Seleccion dinamica de instrumento","Base transaccional unica"],
+  "HAB-11":["Autenticacion biometrica","One-click de bajo riesgo","KYC continuo"],
+  "HAB-14":["Integracion una sola vez","Onboarding mas rapido","Base para white label"],
+  "HAB-16":["Vista consolidada de saldos","Orquestacion por mejor fuente de fondos","Hub financiero"],
+  "HAB-22":["Remesas","Pagos crossborder","Tarjeta multimoneda"],
+  "HAB-30":["Pagos agenticos","Integracion con agentes IA via MCP","Ejecucion con autorizacion delegada"],
+  "HAB-31":["PSE como servicio a terceros","Modelo B2B2C","Escala del ecosistema"],
+  "HAB-32":["Visibilidad financiera global","Agregacion de cuentas del exterior","Casos de uso para colombianos en exterior"]
+};
+
+const habConsiderationsMap = {
+  "HAB-01":["No interrumpir operacion transaccional durante depuracion","Definir gobernanza continua para evitar degradacion futura"],
+  "HAB-02":["Debe coexistir con el flujo actual durante la transicion","La autenticacion propia no puede aumentar friccion"],
+  "HAB-03":["Iniciar proceso regulatorio cuanto antes por tiempos SFC","Gestionar expectativas del ecosistema bancario"],
+  "HAB-04":["Sin calidad de datos el enrolamiento falla","Medir tasa de adopcion de primeros 90 dias"],
+  "HAB-05":["Medir antes/despues para demostrar impacto","Coordinar codigos de error con bancos"],
+  "HAB-06":["Mantener compatibilidad con estandares de Open Finance","La documentacion tecnica es critica para adopcion"],
+  "HAB-07":["Definir revenue sharing por tipo de alianza","Construir valor con agiles primero"],
+  "HAB-08":["Idempotencia obligatoria para evitar doble debito","Reglas deben parametrizarse sin cambios de codigo"],
+  "HAB-09":["Soportar acreditacion inmediata, lote y diferida","Definir manejo de fallos de acreditacion"],
+  "HAB-10":["Plazos varian por instrumento","Trazabilidad y notificacion proactiva al usuario"],
+  "HAB-11":["Biometria iniciar como opcion e incentivo","One-click con control de riesgo por monto"],
+  "HAB-12":["Tiempo de decision antifraude debe ser muy bajo","Reducir falsos positivos para no afectar conversion"],
+  "HAB-13":["No es solo almacenamiento: requiere modelado y gobernanza","Separar claramente dato operacional y analitico"],
+  "HAB-14":["Migracion de 49 entidades debe ser gradual","Versionamiento estable para no romper integraciones"],
+  "HAB-15":["Consentimiento de datos debe ser granular y revocable","Definir SLA de actualizacion por proveedor"],
+  "HAB-16":["Manejar fallos parciales de entidades fuente","Mostrar frescura de saldo por cuenta"],
+  "HAB-17":["Definir umbrales de aprobacion automatica vs revision humana","Asegurar trazabilidad de decisiones IA"],
+  "HAB-18":["No introducir friccion cuando no hay riesgo","Alertas deben ser accionables"],
+  "HAB-19":["Respuesta de scoring debe ser casi inmediata","Disenar multi-originador desde inicio"],
+  "HAB-20":["Seleccion de sponsor es estrategica","Definir claramente experiencia de disputas"],
+  "HAB-21":["Objetivo de anticipo rapido para ventaja competitiva","Definir modelo de monetizacion de factoring"],
+  "HAB-22":["Gestionar riesgo cambiario entre debito y credito","Transparencia total de tipo de cambio al usuario"],
+  "HAB-23":["Velocidad de acreditacion es diferenciador clave","Evitar sobrecosto para receptor final"],
+  "HAB-24":["Flexibilidad de reglas para multiples industrias","Disputas y tiempos de resolucion son criticos"],
+  "HAB-25":["Proceso regulatorio puede ser largo","Empezar con modelo legal minimo viable"],
+  "HAB-26":["Beneficios deben sentirse utiles, no invasivos","Cumplimiento estricto de privacidad en segmentacion"],
+  "HAB-27":["Modelos deben ser explicables","Ejecucion automatizada siempre con autorizacion explicita"],
+  "HAB-28":["Interoperabilidad con estandares existentes","UX en fisico debe ser tan simple como tarjeta"],
+  "HAB-29":["Respetar restricciones de plataformas sociales","Autenticacion segura dentro de contexto embebido"],
+  "HAB-30":["Definir limites de autorizacion delegada","Marco de responsabilidad ante errores del agente"],
+  "HAB-31":["Separacion estricta de datos entre clientes","Modelo comercial y SLA claros por cliente"],
+  "HAB-32":["Cumplimiento de privacidad internacional","Normalizar monedas sin complejidad para usuario" ]
+};
+
+function getHabMeta(habId) {
+  const n = Number(habId.replace('HAB-',''));
+  let ola = 'N/D';
+  let periodo = 'N/D';
+  if (n >= 1 && n <= 7) { ola = 'Ola 0'; periodo = 'Q3-Q4 2026'; }
+  else if (n >= 8 && n <= 14) { ola = 'Ola 1'; periodo = 'Q1-Q2 2027'; }
+  else if (n >= 15 && n <= 21) { ola = 'Ola 2'; periodo = 'Q3-Q4 2027'; }
+  else if (n >= 22 && n <= 27) { ola = 'Ola 3'; periodo = 'Q1-Q2 2028'; }
+  else if (n >= 28 && n <= 32) { ola = 'Ola 4'; periodo = 'Q3 2028-Q1 2029'; }
+
+  const capas = Object.keys(habCapaMap).filter(c => habCapaMap[c].includes(habId));
+  return {
+    ola,
+    periodo,
+    capa: capas.length ? capas.join(' | ') : 'N/D',
+    prioridad: habPriority[habId] || 'Media'
+  };
+}
+
+function setList(id, arr) {
+  const ul = document.getElementById(id);
+  const items = (arr && arr.length) ? arr : ['Sin informacion adicional registrada.'];
+  ul.innerHTML = items.map(x => `<li>${x}</li>`).join('');
+}
+
+function getHabId(olaId, habIndex) {
+  const ids = habIdsByOla[olaId] || [];
+  return ids[habIndex] || "HAB-ND";
+}
+
+function openHabModal(habId) {
+  const h = habCatalog[habId] || { titulo: "Habilitador", desc: "Sin descripcion disponible." };
+  const meta = getHabMeta(habId);
+  document.getElementById('hab-id').textContent = habId;
+  document.getElementById('hab-title').textContent = h.titulo;
+  document.getElementById('hab-body').textContent = h.desc;
+  document.getElementById('hab-meta').innerHTML = `
+    <span class="hab-chip">${meta.ola}</span>
+    <span class="hab-chip">${meta.periodo}</span>
+    <span class="hab-chip">${meta.capa}</span>
+    <span class="hab-chip">Prioridad: ${meta.prioridad}</span>`;
+  setList('hab-enables', habEnablesMap[habId]);
+  setList('hab-prereq', habPrereqMap[habId]);
+  setList('hab-blocks', habBlocksMap[habId]);
+  setList('hab-considerations', habConsiderationsMap[habId]);
+  document.getElementById('hab-overlay').classList.add('on');
+  document.getElementById('hab-modal').classList.add('on');
+}
+
+function closeHabModal() {
+  document.getElementById('hab-overlay').classList.remove('on');
+  document.getElementById('hab-modal').classList.remove('on');
+}
+
 /* ===== RENDER OLAS ===== */
 const row = document.getElementById('olas-row');
 olas.forEach(ola => {
@@ -480,7 +827,10 @@ olas.forEach(ola => {
     </div>
     <div class="ola-body">
       <div class="section-label">Habilitación</div>
-      <ul class="hab-list">${ola.hab.map(h=>`<li class="hab-item">${h}</li>`).join('')}</ul>
+      <ul class="hab-list">${ola.hab.map((h, idx) => {
+        const habId = getHabId(ola.id, idx);
+        return `<li class="hab-item"><span class="hab-item-text">${h}</span><button class="hab-info-btn" type="button" onclick="openHabModal('${habId}')" title="Ver detalle ${habId}" aria-label="Ver detalle ${habId}">i</button></li>`;
+      }).join('')}</ul>
       <div class="section-label">Casos de Uso</div>
       <div class="cu-stack">${cuCards}</div>
     </div>`;
@@ -571,7 +921,12 @@ function closePanel() {
   if(activeCard){ activeCard.classList.remove('is-active'); activeCard=null; }
 }
 
-document.addEventListener('keydown', e => { if(e.key==='Escape') closePanel(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closePanel();
+    closeHabModal();
+  }
+});
 </script>
 </body>
 </html>
