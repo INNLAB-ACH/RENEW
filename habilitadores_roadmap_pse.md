@@ -78,6 +78,7 @@ Construcción de la estructura base del Portal PSE como producto digital propio 
 **Consideraciones clave**
 - El portal debe coexistir con el flujo actual sin interrumpirlo durante la transición
 - La autenticación propia debe ser segura, simple y no generar fricción adicional al usuario
+- La experiencia debe adaptarse al ritmo del usuario en la gestión del dinero: ocultar complejidad operativa/regulatoria y priorizar velocidad, claridad y control percibido
 - Es el artefacto más visible del proyecto — define la percepción inicial del cambio
 
 ---
