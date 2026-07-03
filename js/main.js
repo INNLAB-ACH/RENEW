@@ -19,6 +19,68 @@
     document.getElementById(id).classList.add("screen--active");
   }
 
+  function resetAuthState() {
+    var loginTabBtn = document.getElementById("tab-btn-login");
+    var registroTabBtn = document.getElementById("tab-btn-registro");
+    var loginPanel = document.getElementById("tab-panel-login");
+    var registroPanel = document.getElementById("tab-panel-registro");
+
+    if (loginTabBtn && registroTabBtn && loginPanel && registroPanel) {
+      loginTabBtn.classList.add("auth-tab--active");
+      loginTabBtn.setAttribute("aria-selected", "true");
+      registroTabBtn.classList.remove("auth-tab--active");
+      registroTabBtn.setAttribute("aria-selected", "false");
+      loginPanel.classList.add("auth-panel--active");
+      registroPanel.classList.remove("auth-panel--active");
+    }
+
+    var loginMethods = document.querySelector(".login-methods");
+    var formHelper = document.querySelector(".form-helper");
+    var formLogin = document.getElementById("form-login");
+    var loginSuccess = document.getElementById("login-success");
+    var fieldsBanco = document.getElementById("fields-banco");
+    var fieldsPortal = document.getElementById("fields-portal");
+    var loginSubmit = document.getElementById("btn-login-submit");
+    var favoriteBanks = document.querySelectorAll(".favorite-bank");
+
+    if (formLogin) {
+      formLogin.reset();
+      formLogin.hidden = false;
+    }
+    if (loginSuccess) {
+      loginSuccess.hidden = true;
+    }
+    if (loginMethods) {
+      loginMethods.hidden = false;
+    }
+    if (formHelper) {
+      formHelper.hidden = false;
+    }
+    if (fieldsBanco) {
+      fieldsBanco.hidden = true;
+    }
+    if (fieldsPortal) {
+      fieldsPortal.hidden = true;
+    }
+    if (loginSubmit) {
+      loginSubmit.disabled = true;
+    }
+    favoriteBanks.forEach(function (button) {
+      button.classList.remove("favorite-bank--active");
+      button.setAttribute("aria-pressed", "false");
+    });
+
+    var formRegistro = document.getElementById("form-registro");
+    var registroSuccess = document.getElementById("registro-success");
+    if (formRegistro) {
+      formRegistro.reset();
+      formRegistro.hidden = false;
+    }
+    if (registroSuccess) {
+      registroSuccess.hidden = true;
+    }
+  }
+
   // ---------- Checkout ----------
   function renderCart() {
     var list = document.getElementById("cart-list");
@@ -72,6 +134,7 @@
   // ---------- Navegación ----------
   function initBackButton() {
     document.getElementById("btn-auth-back").addEventListener("click", function () {
+      resetAuthState();
       showScreen("screen-checkout");
     });
   }
