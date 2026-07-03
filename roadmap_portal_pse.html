@@ -587,6 +587,7 @@ const fichas = {
   26:{nombre:"Split Payment / Hagamos Vaca",segmento:"B2C",descripcion:"Capacidad para dividir un pago entre varias personas en una sola transacción objetivo. Un usuario crea la vaca, define monto total y participantes, y cada persona aporta desde su instrumento preferido (cuenta, tarjeta, billetera o BNPL) hasta completar el pago.",objetivo:"Expandir Uso Cotidiano / Pagos Colaborativos",avance:3,trabajos:["Un pago grupal hoy exige múltiples transferencias manuales y conciliación por chat","El organizador asume riesgo de recaudo si alguien no aporta a tiempo","No existe trazabilidad centralizada del estado de aportes por participante","PSE no captura casos cotidianos de pagos compartidos en comercio y servicios"],casos:["Vaca para compras grupales con link de cobro por participante","Aportes parciales con estado en tiempo real (pendiente, pagado, vencido)","Cierre automático cuando se completa el monto objetivo","Reversión proporcional automática si la transacción principal no se ejecuta"],mercado:["Los pagos entre personas y gastos compartidos son un comportamiento masivo en comercio digital y presencial","La simplicidad para cobrar grupos incrementa conversión en eventos, viajes y compras colaborativas"],amenaza:4,ingreso:"Medio",validacion:"Parcial",competencia:["Transferencias P2P manuales (Nequi, Daviplata)","Recaudo por links individuales en pasarelas","Apps de gastos compartidos sin ejecución de pago integrada"]}
 };
 
+
 const olas = [
   {id:0,nombre:"Encender el Portal",sub:"Proteger la Operación",desc:"Estandariza la base operativa del Portal PSE, mejora el flujo actual y consolida capacidades iniciales de recaudo y experiencia para sostener el negocio mientras se habilita la transformación.",periodo:"Q3–Q4 2026",dur:"6 meses",color:"#37474F",stretch:false,
    hab:["Auditoría y depuración de datos de los 20M usuarios registrados","Portal PSE: estructura base, sistema de diseño y autenticación propia (no la del banco)","Habilitación legal como PSP — inicio del proceso ante la SFC","Enrolamiento de usuarios en el portal","Optimización del flujo actual: de 7+ campos a 3 campos; reintentos automáticos; mejora de mensajes de error","Primer módulo de integración unificada (API inicial)","Primeras alianzas con fintechs y billeteras con APIs expuestas (piloto)"],
@@ -656,7 +657,7 @@ const habCapaMap = {
   "L5 — Orquestacion y control": ["HAB-02","HAB-04","HAB-11","HAB-12","HAB-16","HAB-17","HAB-18","HAB-26","HAB-27","HAB-30"],
   "Regulatorio / Gobernanza": ["HAB-03","HAB-25"]
 };
-
+// Capa 1: Ecosistema (HAB-07, HAB-15, HAB-20, HAB-23, HAB-28, HAB-29, HAB-31, HAB-32)
 const habPriority = {
   "HAB-01":"Bloqueante", "HAB-03":"Critica", "HAB-08":"Critica", "HAB-11":"Critica", "HAB-13":"Alta", "HAB-22":"Alta", "HAB-25":"Alta"
 };
