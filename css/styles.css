@@ -602,6 +602,92 @@ body {
   display: none;
 }
 
+.favorite-banks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.favorite-bank {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface-card);
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font: inherit;
+  color: var(--on-surface);
+  transition: border-color 150ms, box-shadow 150ms, transform 100ms;
+}
+
+.favorite-bank:hover {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 2px rgba(0, 48, 135, 0.1);
+}
+
+.favorite-bank:active {
+  transform: scale(0.98);
+}
+
+.favorite-bank--active {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 2px rgba(0, 48, 135, 0.15);
+}
+
+.favorite-bank__logo {
+  background: var(--surface-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 4px;
+}
+
+.favorite-bank__logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.favorite-bank__logo--davivienda {
+  width: 74px;
+  height: 42px;
+  border-radius: 8px;
+  padding: 3px 6px;
+}
+
+.favorite-bank__logo--bancolombia {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+}
+
+.favorite-bank__logo--nequi {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+}
+
+.favorite-bank__name {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.form-subtitle {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .form-success {
   text-align: center;
   padding: 24px 0;
@@ -627,5 +713,9 @@ body {
   .checkout {
     max-width: 600px;
     padding-top: 40px;
+  }
+
+  .favorite-bank__name {
+    font-size: 13px;
   }
 }

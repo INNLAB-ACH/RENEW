@@ -117,11 +117,20 @@
     var fieldsBanco = document.getElementById("fields-banco");
     var fieldsPortal = document.getElementById("fields-portal");
     var submitBtn = document.getElementById("btn-login-submit");
+    var favoriteBanks = document.querySelectorAll(".favorite-bank");
 
     var bancoSelect = document.getElementById("login-banco");
     var bancoEmail = document.getElementById("login-banco-email");
     var usuario = document.getElementById("login-usuario");
     var password = document.getElementById("login-password");
+
+    function syncFavoriteBankSelection(selectedBank) {
+      favoriteBanks.forEach(function (button) {
+        var isActive = button.getAttribute("data-bank") === selectedBank;
+        button.classList.toggle("favorite-bank--active", isActive);
+        button.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+    }
 
     function updateVisibility() {
       var isBanco = methodBanco.checked;
@@ -134,6 +143,10 @@
       bancoEmail.required = isBanco;
       usuario.required = isPortal;
       password.required = isPortal;
+
+      if (!isBanco) {
+        syncFavoriteBankSelection("");
+      }
 
       validateSubmit();
     }
@@ -149,6 +162,24 @@
       }
       submitBtn.disabled = !valid;
     }
+
+    favoriteBanks.forEach(function (button) {
+      button.addEventListener("click", function () {
+        if (!methodBanco.checked) {
+          methodBanco.checked = true;
+          updateVisibility();
+        }
+
+        bancoSelect.value = button.getAttribute("data-bank");
+        syncFavoriteBankSelection(bancoSelect.value);
+        validateSubmit();
+      });
+    });
+
+    bancoSelect.addEventListener("change", function () {
+      syncFavoriteBankSelection(bancoSelect.value);
+      validateSubmit();
+    });
 
     [methodBanco, methodPortal, methodTarjeta, methodCreditoPSE].forEach(function (radio) {
       radio.addEventListener("change", updateVisibility);

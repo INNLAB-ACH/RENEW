@@ -178,6 +178,29 @@
           <form id="form-login" class="form" novalidate>
             <div class="form-row login-fields login-fields--banco" id="fields-banco" hidden>
               <label for="login-banco">Selecciona tu banco</label>
+              <div class="favorite-banks" aria-label="Bancos favoritos">
+                <button type="button" class="favorite-bank" data-bank="bancolombia">
+                  <span class="favorite-bank__logo favorite-bank__logo--bancolombia" aria-hidden="true">
+                    <img src="assets/bancolombia.png" alt="" class="favorite-bank__logo-image" />
+                  </span>
+                  <span class="favorite-bank__name">Bancolombia</span>
+                </button>
+                <button type="button" class="favorite-bank" data-bank="davivienda">
+                  <span class="favorite-bank__logo favorite-bank__logo--davivienda" aria-hidden="true">
+                    <img src="assets/davivienda.png" alt="" class="favorite-bank__logo-image" />
+                  </span>
+                  <span class="favorite-bank__name">Davivienda</span>
+                </button>
+                <button type="button" class="favorite-bank" data-bank="nequi">
+                  <span class="favorite-bank__logo favorite-bank__logo--nequi" aria-hidden="true">
+                    <img src="assets/nequi.png" alt="" class="favorite-bank__logo-image" />
+                  </span>
+                  <span class="favorite-bank__name">Nequi</span>
+                </button>
+              </div>
+
+              <p class="form-subtitle">Pagar con otros bancos</p>
+
               <select id="login-banco" name="banco">
                 <option value="" disabled selected>Selecciona un banco</option>
                 <option value="bancolombia">Bancolombia</option>
