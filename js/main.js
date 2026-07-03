@@ -199,9 +199,12 @@
       e.preventDefault();
       if (submitBtn.disabled) return;
 
-      if (methodTarjeta.checked || methodCreditoPSE.checked) {
+      if (methodBanco.checked) {
         loginSuccessTitle.textContent = "🔄 Redirigiendo...";
-        loginSuccessText.textContent = "Serás llevado a la plataforma de pago de terceros para completar tu transacción.";
+        loginSuccessText.textContent = "Serás llevado al flujo de la entidad financiera seleccionada para completar tu transacción.";
+      } else if (methodTarjeta.checked || methodCreditoPSE.checked) {
+        loginSuccessTitle.textContent = "🔄 Redirigiendo...";
+        loginSuccessText.textContent = "Serás llevado a la experiencia del aliado o tercero correspondiente para completar tu transacción.";
       } else {
         loginSuccessTitle.textContent = "¡Formulario enviado!";
         loginSuccessText.textContent = "Hemos recibido tu solicitud de ingreso correctamente.";
