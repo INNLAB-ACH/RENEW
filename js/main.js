@@ -8,6 +8,16 @@
   ];
   var SHIPPING = 12000;
 
+  var BANKS = {
+    bancolombia: { name: "Bancolombia", logo: "assets/bancolombia.png" },
+    davivienda: { name: "Davivienda", logo: "assets/davivienda.png" },
+    bbva: { name: "BBVA Colombia", logo: "" },
+    bogota: { name: "Banco de Bogotá", logo: "" },
+    occidente: { name: "Banco de Occidente", logo: "" },
+    nequi: { name: "Nequi", logo: "assets/nequi.png" },
+    daviplata: { name: "Daviplata", logo: "" },
+  };
+
   function formatCOP(value) {
     return "$" + value.toLocaleString("es-CO");
   }
@@ -38,10 +48,18 @@
     var formHelper = document.querySelector(".form-helper");
     var formLogin = document.getElementById("form-login");
     var loginSuccess = document.getElementById("login-success");
-    var fieldsBanco = document.getElementById("fields-banco");
+    var bancoCard = document.getElementById("login-method-banco-card");
+    var summaryCard = document.getElementById("summary-card");
+    var fieldsBancoEdit = document.getElementById("fields-banco-edit");
     var fieldsPortal = document.getElementById("fields-portal");
     var loginSubmit = document.getElementById("btn-login-submit");
+    var methodBanco = document.getElementById("login-method-banco");
     var favoriteBanks = document.querySelectorAll(".favorite-bank");
+    var loginNombre = document.getElementById("login-nombre");
+    var loginTipoDoc = document.getElementById("login-tipo-doc");
+    var loginNumDoc = document.getElementById("login-num-doc");
+    var loginBanco = document.getElementById("login-banco");
+    var loginBancoEmail = document.getElementById("login-banco-email");
 
     if (formLogin) {
       formLogin.reset();
@@ -50,20 +68,44 @@
     if (loginSuccess) {
       loginSuccess.hidden = true;
     }
+    if (bancoCard) {
+      bancoCard.hidden = false;
+    }
+    if (methodBanco) {
+      methodBanco.checked = true;
+    }
+    if (summaryCard) {
+      summaryCard.hidden = false;
+    }
+    if (fieldsBancoEdit) {
+      fieldsBancoEdit.hidden = true;
+    }
+    if (loginNombre) {
+      loginNombre.value = "";
+    }
+    if (loginTipoDoc) {
+      loginTipoDoc.value = "";
+    }
+    if (loginNumDoc) {
+      loginNumDoc.value = "";
+    }
+    if (loginBanco) {
+      loginBanco.value = "";
+    }
+    if (loginBancoEmail) {
+      loginBancoEmail.value = "";
+    }
     if (loginMethods) {
       loginMethods.hidden = false;
     }
     if (formHelper) {
       formHelper.hidden = false;
     }
-    if (fieldsBanco) {
-      fieldsBanco.hidden = true;
-    }
     if (fieldsPortal) {
       fieldsPortal.hidden = true;
     }
     if (loginSubmit) {
-      loginSubmit.disabled = true;
+      loginSubmit.disabled = false;
     }
     favoriteBanks.forEach(function (button) {
       button.classList.remove("favorite-bank--active");
@@ -78,6 +120,11 @@
     }
     if (registroSuccess) {
       registroSuccess.hidden = true;
+    }
+
+    var formDatosCliente = document.getElementById("form-datos-cliente");
+    if (formDatosCliente) {
+      formDatosCliente.reset();
     }
   }
 
@@ -124,10 +171,7 @@
 
     goPayBtn.addEventListener("click", function () {
       if (goPayBtn.disabled) return;
-      showScreen("screen-loading");
-      window.setTimeout(function () {
-        showScreen("screen-auth");
-      }, 3000);
+      showScreen("screen-datos-cliente");
     });
   }
 
@@ -137,6 +181,102 @@
       resetAuthState();
       showScreen("screen-checkout");
     });
+  }
+
+  // ---------- Resumen de transacción ----------
+  function renderBancoSummary(bancoValue) {
+    var banco = BANKS[bancoValue];
+    var bancoEl = document.getElementById("summary-card-banco");
+
+    bancoEl.innerHTML = "";
+    if (banco) {
+      if (banco.logo) {
+        var img = document.createElement("img");
+        img.className = "summary-card__bank-logo";
+        img.src = banco.logo;
+        img.alt = banco.name;
+        bancoEl.appendChild(img);
+      }
+      bancoEl.appendChild(document.createTextNode(banco.name));
+    } else {
+      bancoEl.textContent = "—";
+    }
+  }
+
+  function renderSummaryCard() {
+    var bancoValue = document.getElementById("dc-banco").value;
+
+    document.getElementById("summary-card-tienda").textContent =
+      document.querySelector(".store-header__name").textContent;
+    document.getElementById("summary-card-monto").textContent =
+      document.getElementById("summary-total").textContent;
+    document.getElementById("summary-card-nombre").textContent =
+      document.getElementById("dc-nombre-completo").value;
+    document.getElementById("summary-card-correo").textContent =
+      document.getElementById("dc-email").value;
+    renderBancoSummary(bancoValue);
+
+    document.getElementById("login-nombre").value = document.getElementById("dc-nombre-completo").value;
+    document.getElementById("login-tipo-doc").value = document.getElementById("dc-tipo-doc").value;
+    document.getElementById("login-num-doc").value = document.getElementById("dc-num-doc").value;
+    document.getElementById("login-banco-email").value = document.getElementById("dc-email").value;
+
+    var loginBancoSelect = document.getElementById("login-banco");
+    loginBancoSelect.value = bancoValue;
+    loginBancoSelect.dispatchEvent(new Event("change"));
+  }
+
+  // ---------- Datos del cliente ----------
+  function initDatosCliente() {
+    var form = document.getElementById("form-datos-cliente");
+    var submitBtn = document.getElementById("btn-datos-cliente-submit");
+    var backBtn = document.getElementById("btn-datos-cliente-back");
+    var personaRadios = document.querySelectorAll('input[name="tipoPersona"]');
+    var requiredFields = [
+      document.getElementById("dc-nombre-completo"),
+      document.getElementById("dc-email"),
+      document.getElementById("dc-tipo-doc"),
+      document.getElementById("dc-num-doc"),
+      document.getElementById("dc-direccion"),
+      document.getElementById("dc-banco"),
+    ];
+
+    function validateSubmit() {
+      var hasPersona = document.querySelector('input[name="tipoPersona"]:checked') !== null;
+      var fieldsFilled = requiredFields.every(function (field) {
+        return field.value.trim() !== "";
+      });
+      submitBtn.disabled = !(hasPersona && fieldsFilled);
+    }
+
+    personaRadios.forEach(function (radio) {
+      radio.addEventListener("change", validateSubmit);
+    });
+
+    requiredFields.forEach(function (field) {
+      field.addEventListener("input", validateSubmit);
+      field.addEventListener("change", validateSubmit);
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (submitBtn.disabled) return;
+      renderSummaryCard();
+      showScreen("screen-loading");
+      window.setTimeout(function () {
+        showScreen("screen-auth");
+      }, 3000);
+    });
+
+    backBtn.addEventListener("click", function () {
+      showScreen("screen-checkout");
+    });
+
+    form.addEventListener("reset", function () {
+      window.setTimeout(validateSubmit, 0);
+    });
+
+    validateSubmit();
   }
 
   // ---------- Auth tabs ----------
@@ -177,7 +317,9 @@
     var methodPortal = document.getElementById("login-method-portal");
     var methodTarjeta = document.getElementById("login-method-tarjeta");
     var methodCreditoPSE = document.getElementById("login-method-credito-pse");
-    var fieldsBanco = document.getElementById("fields-banco");
+    var bancoCard = document.getElementById("login-method-banco-card");
+    var summaryCard = document.getElementById("summary-card");
+    var fieldsBancoEdit = document.getElementById("fields-banco-edit");
     var fieldsPortal = document.getElementById("fields-portal");
     var submitBtn = document.getElementById("btn-login-submit");
     var favoriteBanks = document.querySelectorAll(".favorite-bank");
@@ -199,11 +341,10 @@
       var isBanco = methodBanco.checked;
       var isPortal = methodPortal.checked;
 
-      fieldsBanco.hidden = !isBanco;
+      summaryCard.hidden = !isBanco;
+      fieldsBancoEdit.hidden = true;
       fieldsPortal.hidden = !isPortal;
 
-      bancoSelect.required = isBanco;
-      bancoEmail.required = isBanco;
       usuario.required = isPortal;
       password.required = isPortal;
 
@@ -217,7 +358,7 @@
     function validateSubmit() {
       var valid = false;
       if (methodBanco.checked) {
-        valid = bancoSelect.value.trim() !== "" && bancoEmail.value.trim() !== "";
+        valid = true;
       } else if (methodPortal.checked) {
         valid = usuario.value.trim() !== "" && password.value.trim() !== "";
       } else if (methodTarjeta.checked || methodCreditoPSE.checked) {
@@ -228,11 +369,6 @@
 
     favoriteBanks.forEach(function (button) {
       button.addEventListener("click", function () {
-        if (!methodBanco.checked) {
-          methodBanco.checked = true;
-          updateVisibility();
-        }
-
         bancoSelect.value = button.getAttribute("data-bank");
         syncFavoriteBankSelection(bancoSelect.value);
         validateSubmit();
@@ -251,6 +387,19 @@
     [bancoSelect, bancoEmail, usuario, password].forEach(function (field) {
       field.addEventListener("input", validateSubmit);
       field.addEventListener("change", validateSubmit);
+    });
+
+    document.getElementById("btn-summary-edit").addEventListener("click", function () {
+      summaryCard.hidden = true;
+      fieldsBancoEdit.hidden = false;
+    });
+
+    document.getElementById("btn-summary-edit-save").addEventListener("click", function () {
+      document.getElementById("summary-card-nombre").textContent = document.getElementById("login-nombre").value;
+      document.getElementById("summary-card-correo").textContent = document.getElementById("login-banco-email").value;
+      renderBancoSummary(bancoSelect.value);
+      fieldsBancoEdit.hidden = true;
+      summaryCard.hidden = false;
     });
 
     var form = document.getElementById("form-login");
@@ -274,6 +423,9 @@
       }
 
       form.hidden = true;
+      bancoCard.hidden = true;
+      summaryCard.hidden = true;
+      fieldsBancoEdit.hidden = true;
       document.querySelector(".login-methods").hidden = true;
       document.querySelector(".form-helper").hidden = true;
       loginSuccess.hidden = false;
@@ -283,6 +435,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     renderCart();
     initPaymentSelection();
+    initDatosCliente();
     initBackButton();
     initTabs();
     initRegistro();

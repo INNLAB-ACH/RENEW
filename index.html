@@ -74,7 +74,101 @@
     </main>
   </section>
 
-  <!-- ===================== PANTALLA 2: CARGA / PROCESANDO (estilo referencia.png) ===================== -->
+  <!-- ===================== PANTALLA 2: DATOS DEL CLIENTE ===================== -->
+  <section id="screen-datos-cliente" class="screen">
+    <header class="pse-topbar">
+      <div class="pse-topbar__brand">
+        <img src="assets/logo-pse.png" alt="PSE" class="pse-topbar__logo" />
+        <span class="pse-topbar__slogan">¡Fácil, rápido y seguro!</span>
+      </div>
+    </header>
+
+    <main class="auth">
+      <div class="auth-card">
+        <button type="button" class="btn-back" id="btn-datos-cliente-back">
+          <span aria-hidden="true">←</span> Atrás
+        </button>
+
+        <div class="auth-panel auth-panel--active">
+          <h2 class="section-title">Cuéntanos un poco de ti</h2>
+
+          <form id="form-datos-cliente" class="form" novalidate>
+            <div class="form-row">
+              <span class="form-subtitle">Tipo de persona</span>
+              <div class="login-methods">
+                <label class="login-method-option" for="dc-persona-natural">
+                  <input type="radio" id="dc-persona-natural" name="tipoPersona" value="natural" required checked />
+                  <span class="login-method-option__icon" aria-hidden="true">🧑</span>
+                  <span class="login-method-option__title">Persona natural</span>
+                </label>
+
+                <label class="login-method-option" for="dc-persona-juridica">
+                  <input type="radio" id="dc-persona-juridica" name="tipoPersona" value="juridica" required />
+                  <span class="login-method-option__icon" aria-hidden="true">🏢</span>
+                  <span class="login-method-option__title">Persona jurídica</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label for="dc-nombre-completo">Nombre completo</label>
+              <input type="text" id="dc-nombre-completo" name="nombreCompleto" value="María Fernanda Gómez Ríos" required />
+            </div>
+
+            <div class="form-row">
+              <label for="dc-email">Correo electrónico</label>
+              <input type="email" id="dc-email" name="correo" value="maria.gomez@example.com" required />
+            </div>
+
+            <div class="form-row">
+              <label for="dc-tipo-doc">Tipo de identificación</label>
+              <select id="dc-tipo-doc" name="tipoDocumento" required>
+                <option value="" disabled>Selecciona un tipo</option>
+                <option value="CC" selected>Cédula de ciudadanía</option>
+                <option value="CE">Cédula de extranjería</option>
+                <option value="NIT">NIT</option>
+                <option value="PA">Pasaporte</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="dc-num-doc">Número de identificación</label>
+              <input type="text" id="dc-num-doc" name="numeroDocumento" inputmode="numeric" value="1020304050" required />
+            </div>
+
+            <div class="form-row">
+              <label for="dc-direccion">Dirección</label>
+              <input type="text" id="dc-direccion" name="direccion" value="Calle 45 # 12-30, Bogotá" required />
+            </div>
+
+            <div class="form-row">
+              <label for="dc-banco">Entidad financiera</label>
+              <select id="dc-banco" name="entidadFinanciera" required>
+                <option value="" disabled>Selecciona un banco</option>
+                <option value="bancolombia">Bancolombia</option>
+                <option value="davivienda" selected>Davivienda</option>
+                <option value="bbva">BBVA Colombia</option>
+                <option value="bogota">Banco de Bogotá</option>
+                <option value="occidente">Banco de Occidente</option>
+                <option value="nequi">Nequi</option>
+                <option value="daviplata">Daviplata</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--block" id="btn-datos-cliente-submit" disabled>
+              Continuar
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <img src="assets/footer.png" alt="ACH Colombia — Para mayor información comunícate con nosotros" />
+    </footer>
+  </section>
+
+  <!-- ===================== PANTALLA 3: CARGA / PROCESANDO (estilo referencia.png) ===================== -->
   <section id="screen-loading" class="screen">
     <header class="pse-topbar">
       <div class="pse-topbar__brand">
@@ -117,7 +211,7 @@
     </footer>
   </section>
 
-  <!-- ===================== PANTALLA 3: LOGIN / REGISTRO ===================== -->
+  <!-- ===================== PANTALLA 4: LOGIN / REGISTRO ===================== -->
   <section id="screen-auth" class="screen">
     <header class="pse-topbar">
       <div class="pse-topbar__brand">
@@ -143,16 +237,113 @@
 
         <!-- TAB LOGIN -->
         <div class="auth-panel auth-panel--active" id="tab-panel-login" role="tabpanel">
-          <p class="form-helper">Selecciona cómo deseas ingresar</p>
+          <label class="login-method-option login-method-option--standalone" for="login-method-banco" id="login-method-banco-card">
+            <input type="radio" id="login-method-banco" name="login-method" value="banco" checked />
+            <span class="login-method-option__icon" aria-hidden="true">🏦</span>
+            <span class="login-method-option__title">Pagar desde mi banco</span>
+            <span class="login-method-option__hint">Ingresa con tu banco afiliado a PSE</span>
+          </label>
+
+          <div class="summary-card" id="summary-card">
+            <button type="button" class="summary-card__edit" id="btn-summary-edit" aria-label="Editar datos">
+              <span aria-hidden="true">✏️</span>
+            </button>
+
+            <div class="summary-card__row">
+              <span class="summary-card__label">Tienda</span>
+              <span class="summary-card__value" id="summary-card-tienda">Tienda Andina</span>
+            </div>
+            <div class="summary-card__row">
+              <span class="summary-card__label">Monto</span>
+              <span class="summary-card__value" id="summary-card-monto">$0</span>
+            </div>
+            <div class="summary-card__row">
+              <span class="summary-card__label">Nombre</span>
+              <span class="summary-card__value" id="summary-card-nombre">—</span>
+            </div>
+            <div class="summary-card__row">
+              <span class="summary-card__label">Correo</span>
+              <span class="summary-card__value" id="summary-card-correo">—</span>
+            </div>
+            <div class="summary-card__row">
+              <span class="summary-card__label">Entidad financiera</span>
+              <span class="summary-card__value summary-card__value--bank" id="summary-card-banco">—</span>
+            </div>
+          </div>
+
+          <div class="form login-fields login-fields--banco-edit" id="fields-banco-edit" hidden>
+            <div class="form-row">
+              <label for="login-banco">Bancos favoritos</label>
+              <div class="favorite-banks" aria-label="Bancos favoritos">
+                <button type="button" class="favorite-bank" data-bank="bancolombia">
+                  <span class="favorite-bank__logo favorite-bank__logo--bancolombia" aria-hidden="true">
+                    <img src="assets/bancolombia.png" alt="" class="favorite-bank__logo-image" />
+                  </span>
+                  <span class="favorite-bank__name">Bancolombia</span>
+                </button>
+                <button type="button" class="favorite-bank" data-bank="davivienda">
+                  <span class="favorite-bank__logo favorite-bank__logo--davivienda" aria-hidden="true">
+                    <img src="assets/davivienda.png" alt="" class="favorite-bank__logo-image" />
+                  </span>
+                  <span class="favorite-bank__name">Davivienda</span>
+                </button>
+                <button type="button" class="favorite-bank" data-bank="nequi">
+                  <span class="favorite-bank__logo favorite-bank__logo--nequi" aria-hidden="true">
+                    <img src="assets/nequi.png" alt="" class="favorite-bank__logo-image" />
+                  </span>
+                  <span class="favorite-bank__name">Nequi</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <p class="form-subtitle">Selección de otros bancos</p>
+              <select id="login-banco" name="banco">
+                <option value="" disabled selected>Selecciona un banco</option>
+                <option value="bancolombia">Bancolombia</option>
+                <option value="davivienda">Davivienda</option>
+                <option value="bbva">BBVA Colombia</option>
+                <option value="bogota">Banco de Bogotá</option>
+                <option value="occidente">Banco de Occidente</option>
+                <option value="nequi">Nequi</option>
+                <option value="daviplata">Daviplata</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="login-nombre">Nombre</label>
+              <input type="text" id="login-nombre" name="nombreBanco" />
+            </div>
+
+            <div class="form-row">
+              <label for="login-tipo-doc">Tipo de identificación</label>
+              <select id="login-tipo-doc" name="tipoDocumentoBanco">
+                <option value="" disabled selected>Selecciona un tipo</option>
+                <option value="CC">Cédula de ciudadanía</option>
+                <option value="CE">Cédula de extranjería</option>
+                <option value="NIT">NIT</option>
+                <option value="PA">Pasaporte</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="login-num-doc">Número de identificación</label>
+              <input type="text" id="login-num-doc" name="numeroDocumentoBanco" inputmode="numeric" />
+            </div>
+
+            <div class="form-row">
+              <label for="login-banco-email">Correo electrónico</label>
+              <input type="email" id="login-banco-email" name="correoBanco" />
+            </div>
+
+            <button type="button" class="btn btn--primary btn--block" id="btn-summary-edit-save">
+              Guardar
+            </button>
+          </div>
+
+          <p class="form-helper">Usar otras formas de pago PSE</p>
 
           <div class="login-methods">
-            <label class="login-method-option" for="login-method-banco">
-              <input type="radio" id="login-method-banco" name="login-method" value="banco" />
-              <span class="login-method-option__icon" aria-hidden="true">🏦</span>
-              <span class="login-method-option__title">Pagar desde mi banco</span>
-              <span class="login-method-option__hint">Ingresa con tu banco afiliado a PSE</span>
-            </label>
-
             <label class="login-method-option" for="login-method-tarjeta">
               <input type="radio" id="login-method-tarjeta" name="login-method" value="tarjeta" />
               <span class="login-method-option__icon" aria-hidden="true">💳</span>
@@ -176,46 +367,6 @@
           </div>
 
           <form id="form-login" class="form" novalidate>
-            <div class="form-row login-fields login-fields--banco" id="fields-banco" hidden>
-              <label for="login-banco">Selecciona tu banco</label>
-              <div class="favorite-banks" aria-label="Bancos favoritos">
-                <button type="button" class="favorite-bank" data-bank="bancolombia">
-                  <span class="favorite-bank__logo favorite-bank__logo--bancolombia" aria-hidden="true">
-                    <img src="assets/bancolombia.png" alt="" class="favorite-bank__logo-image" />
-                  </span>
-                  <span class="favorite-bank__name">Bancolombia</span>
-                </button>
-                <button type="button" class="favorite-bank" data-bank="davivienda">
-                  <span class="favorite-bank__logo favorite-bank__logo--davivienda" aria-hidden="true">
-                    <img src="assets/davivienda.png" alt="" class="favorite-bank__logo-image" />
-                  </span>
-                  <span class="favorite-bank__name">Davivienda</span>
-                </button>
-                <button type="button" class="favorite-bank" data-bank="nequi">
-                  <span class="favorite-bank__logo favorite-bank__logo--nequi" aria-hidden="true">
-                    <img src="assets/nequi.png" alt="" class="favorite-bank__logo-image" />
-                  </span>
-                  <span class="favorite-bank__name">Nequi</span>
-                </button>
-              </div>
-
-              <p class="form-subtitle">Pagar con otros bancos</p>
-
-              <select id="login-banco" name="banco">
-                <option value="" disabled selected>Selecciona un banco</option>
-                <option value="bancolombia">Bancolombia</option>
-                <option value="davivienda">Davivienda</option>
-                <option value="bbva">BBVA Colombia</option>
-                <option value="bogota">Banco de Bogotá</option>
-                <option value="occidente">Banco de Occidente</option>
-                <option value="nequi">Nequi</option>
-                <option value="daviplata">Daviplata</option>
-              </select>
-
-              <label for="login-banco-email">Correo electrónico</label>
-              <input type="email" id="login-banco-email" name="correoBanco" />
-            </div>
-
             <div class="form-row login-fields login-fields--portal" id="fields-portal" hidden>
               <label for="login-usuario">Usuario</label>
               <input type="text" id="login-usuario" name="usuario" />
@@ -224,7 +375,7 @@
               <input type="password" id="login-password" name="password" />
             </div>
 
-            <button type="submit" class="btn btn--primary btn--block" id="btn-login-submit" disabled>
+            <button type="submit" class="btn btn--primary btn--block" id="btn-login-submit">
               Ingresar
             </button>
           </form>

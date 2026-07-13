@@ -509,9 +509,84 @@ body {
 }
 
 .form-helper {
-  font-size: 14px;
-  color: var(--text-muted);
   margin: 0 0 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.summary-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 16px 44px 16px 16px;
+  margin-bottom: 20px;
+}
+
+.summary-card[hidden] {
+  display: none;
+}
+
+.summary-card__edit {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 150ms, background-color 150ms;
+}
+
+.summary-card__edit:hover {
+  border-color: var(--brand-primary);
+  background: #fff;
+}
+
+.summary-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.summary-card__label {
+  color: var(--text-muted);
+}
+
+.summary-card__value {
+  font-weight: 600;
+  text-align: right;
+  max-width: 60%;
+  overflow-wrap: break-word;
+}
+
+.summary-card__value--bank {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.summary-card__bank-logo {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 .login-methods {
@@ -583,6 +658,14 @@ body {
   line-height: 1.35;
 }
 
+.login-method-option--standalone {
+  margin-bottom: 12px;
+}
+
+.login-method-option[hidden] {
+  display: none;
+}
+
 .login-method-option--disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -600,6 +683,11 @@ body {
 
 .login-fields[hidden] {
   display: none;
+}
+
+.login-fields--banco-edit {
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
 .favorite-banks {
